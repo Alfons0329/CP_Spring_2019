@@ -47,7 +47,7 @@ int main()
     {
         nums_pos.push_back(make_pair(nums[i], i));
     }
-    sort(nums_pos.begin(), nums_pos.end());
+    sort(nums_pos.begin(), nums_pos.end(), cmp);
     while(t--)
     {
         cin >> L >> R >> k;
