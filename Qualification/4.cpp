@@ -12,16 +12,24 @@ int main()
     }
     
     int n = nums.size();
-    int max_sum = -9999999, tmp_sum = 0;
+    int max_sum = INT_MIN, tmp_sum = 0, max_val = INT_MIN, all_minus = 1;
     for(int i = 0; i < n; i++)
     {
-        tmp_sum += nums[i];
-        if(tmp_sum < 0)
+        if(nums[i] >= 0)
         {
-            tmp_sum = nums[i];
+            all_minus = 0;
         }
-        max_sum = max(tmp_sum, max_sum);
+        tmp_sum += nums[i];
+        max_val = max(max_val, nums[i]); //for testcase 2, if all are the minus
+        if(tmp_sum >= 0)
+        {
+            max_sum = max(tmp_sum, max_sum);
+        }
+        else
+        {
+            tmp_sum = 0;
+        }
     }
-    printf("%d\n", max_sum);
+    printf("%d\n", all_minus ? max_val : max_sum);
     return 0;
 }
