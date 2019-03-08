@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#define ull unsigned long long
+#define MAX_N 201;
 using namespace std;
 
 vector<int> str_2_big(string s)
@@ -37,26 +37,27 @@ string big_num_add(string s1, string s2)
         swap(s1, s2);
     }
 
-    vector<int>res(n + 2, 0);
-    n += 2;
+    vector<int>res(n + 1, 0);
 
     vector<int> num_1 = str_2_big(s1);
     vector<int> num_2 = str_2_big(s2);
 
-    for(int i = 0; i < n; i++)
+    for(int i = 0; i < n + 1; i++)
     {
-        if(i >= m)
+        if(i >= m && i < n)
         {
             res[i] = num_1[i];
         }
         else
         {
+            printf("i %d , %d + %d\n", i, num_1[i], num_2[i]);
             res[i] = num_1[i] + num_2[i];
         }
     }
     
-    for(int i = n - 1; i >= 0; i--)
+    for(int i = n; i >= 0; i--)
     {
+        printf("i %d res %d\n", i, res[i]);
         if(res[i] >= 10)
         {
             res[i - 1] += res[i] / 10;
@@ -96,7 +97,7 @@ string big_num_mul(string s1, string s2)
         k = 0;
     }
 
-    for(int i = total_len; i >= 0; i--)
+    for(int i = total_len - 1; i >= 0; i--)
     {
         if(res[i] >= 10)
         {
