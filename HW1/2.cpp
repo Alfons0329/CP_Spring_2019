@@ -1,95 +1,50 @@
 #include <bits/stdc++.h>
-#define MAX_N 201
-#define MAX_NN 402
+#define MAX_N 402
 using namespace std;
 
-void str_2_big(string s, int* v)
+int res[MAX_N];
+int num[MAX_N];
+
+void str_2_big(string s, int in[MAX_N], int str_len)
 {
-    int n = s.size();
-    for(int i = 0; i < n; i++)
+    for(int i = 0; i < MAX_N; i++)
     {
-        v[MAX_N - i - 1] = s[n - i - 1] - '0';
+        in[MAX_N - i - 1] = s[str_len - i - 1] - '0';
     }
 }
 
-string big_2_str(int* v, int len)
+void big_num_add()
 {
-    string s;
-    int non_zero_flg = 0;
-    for(int i = 0; i < len; i++)
+    for(int i = MAX_N - 1; i >= 0; i--)
     {
-        if(v[i] > 0)
-        {
-            non_zero_flg = 1;
-        }
-        if(non_zero_flg)
-        {
-            s += to_string(v[i]);
-        }
+        res[i] += num[i];
     }
-    return s;
-}
-
-string big_num_add(string s1, string s2)
-{
-    int n = s1.size();
-    int m = s2.size();
-
-    int res[MAX_N] = {0};
-    int num_1[MAX_N] = {0}; 
-    int num_2[MAX_N] = {0};
-    str_2_big(s1, num_1);
-    str_2_big(s2, num_2);
 
     for(int i = MAX_N - 1; i >= 0; i--)
     {
-        // printf("i %d , %d + %d\n", i, num_1[i], num_2[i]);
-        if(num_1[i] == 0 && num_2[i] == 0)
-        {
-            break;
-        }
-        res[i] = num_1[i] + num_2[i];
-    }
-    
-    for(int i = MAX_N - 1; i >= 0; i--)
-    {
-        // printf("i %d res %d\n", i, res[i]);
         if(res[i] >= 10)
         {
             res[i - 1] += res[i] / 10;
             res[i] %= 10;
         }
-        else if(res[i] == 0)
-        {
-            break;
-        }
     }
-    return big_2_str(res, MAX_N);
 }
 
-string big_num_mul(string s1, string s2)
+void big_num_mul()
 {
-    int n = s1.size();
-    int m = s2.size();
-
-    int res[MAX_NN] = {0};
-    int num_1[MAX_N] = {0}; 
-    int num_2[MAX_N] = {0};
-    str_2_big(s1, num_1);
-    str_2_big(s2, num_2);
     int k = 0;
 
-    for(int i = MAX_N - 1, l = MAX_NN - 1; i >= 0; i--, l--)
+    for(int i = MAX_N - 1, l = MAX_N - 1; i >= 0; i--, l--)
     {
         for(int j = MAX_N - 1; j >= 0; j--)
         {
-            res[l - k] += num_1[i] * num_2[j];
+            res[l - k] *= num[i];
             k++;
         }
         k = 0;
     }
 
-    for(int i = MAX_NN - 1; i >= 0; i--)
+    for(int i = MAX_N - 1; i >= 0; i--)
     {
         if(res[i] >= 10)
         {
@@ -97,64 +52,88 @@ string big_num_mul(string s1, string s2)
             res[i] %= 10;
         }
     }
-    return big_2_str(res, MAX_NN);
 }
 
+void print_res()
+{
+    int start_pos = 0;
+    for(int i = 0; i < MAX_N; i++)
+    {
+        if(res[i] != 0)
+        {
+            start_pos = i;
+        }
+    }
 
+    for(int i = start_pos; i < MAX_N; i++)
+    {
+        printf("%d", res[i]);
+    }
+    printf("\n");
+    return;
+}
 int main()
 {
     string str, tmp;
     std::ios::sync_with_stdio(false);
     std::cin.tie(0);
-
-    vector<string> stk;
+    int n, cnt, str_len, flag;
+    char last_oper, this_oper;
     while(getline(cin, str))
     {
-        int n = str.size(), cnt = 0;
-        stk.clear();
+        n = str.size();
+        cnt = 0;
+        flag = 0;
+        
+        memset(res, 0, sizeof(res));
+        memset(num, 0, sizeof(num));
+        
         for(int i = 0; i < n; i++)
         {
-            if(str[i] <= '9' && str[i] >= '0') // pb the operands
+            str_len = 0;
+            if(str[i] <= '9' && str[i] >= '0') // collect the operands
             {
                 cnt = i;
-                while(str[cnt] >= '0' )
+                
+                while(str[cnt] >= '0')
                 {
                     cnt++;
+                    str_len++;
+                    if(cnt == n)
+                    {
+                        break;
+                    }
                 }
-                stk.push_back(str.substr(i, cnt - i));
+                
+                tmp = str.substr(i, cnt - i);
                 i = cnt - 1;
             }
-            else // pb the operator
+
+            if(flag == 0) // 1st number to do
             {
-                tmp = "";
-                tmp += str[i];
-                stk.push_back(tmp);
+                str_2_big(tmp, res, str_len);
+                last_oper = str[i];
+                cout << "1st " << tmp << " last_oper" << last_oper << endl;
+                flag = 1;
+            }
+            else
+            {
+                str_2_big(tmp, res, str_len);
+                last_oper = this_oper;
+                this_oper = str[i];
+                cout << "to oper " << tmp << " last_oper" << last_oper << endl;
             }
 
-            if(stk.size() == 3) // do operation
+            if(last_oper == '+')
             {
-                if(stk[1] == "+")
-                {
-                    if(stk[0] != "0" && stk[2] != "0")
-                    {
-                        tmp = big_num_add(stk[0], stk[2]);
-                    }
-
-                }
-                else if(stk[1] == "*")
-                {
-                    if(stk[0] != "0" && stk[2] != "0")
-                    {
-                        tmp = big_num_mul(stk[0], stk[2]);
-                    }
-                }
-                stk.clear();
-                stk.push_back(tmp);
+                big_num_add();
             }
-            // cout << "Stktop " << stk.back() << endl;
+            else if(last_oper == '*')
+            {
+                big_num_mul();
+            }
         }
-        cout << stk.back() << '\n';
+        print_res();
     }
     return 0;
 }
-
