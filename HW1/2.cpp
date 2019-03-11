@@ -107,7 +107,7 @@ int main()
     std::ios::sync_with_stdio(false);
     std::cin.tie(0);
 
-    vector<string> stk;
+    string res;
     while(getline(cin, str))
     {
         int n = str.size(), cnt = 0;
@@ -130,30 +130,7 @@ int main()
                 tmp += str[i];
                 stk.push_back(tmp);
             }
-
-            if(stk.size() == 3) // do operation
-            {
-                if(stk[1] == "+")
-                {
-                    if(stk[0] != "0" && stk[2] != "0")
-                    {
-                        tmp = big_num_add(stk[0], stk[2]);
-                    }
-
-                }
-                else if(stk[1] == "*")
-                {
-                    if(stk[0] != "0" && stk[2] != "0")
-                    {
-                        tmp = big_num_mul(stk[0], stk[2]);
-                    }
-                }
-                stk.clear();
-                stk.push_back(tmp);
-            }
-            // cout << "Stktop " << stk.back() << endl;
-        }
-        cout << stk.back() << '\n';
+       }
     }
     return 0;
 }
