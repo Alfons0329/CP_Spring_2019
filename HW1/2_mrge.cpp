@@ -77,8 +77,13 @@ int main()
     string str, tmp;
     std::ios::sync_with_stdio(false);
     std::cin.tie(0);
+<<<<<<< HEAD
     int n, cnt, str_len, flag;
     char last_oper, this_oper;
+=======
+
+    string res;
+>>>>>>> e0bc4ba4b0b8873ecee8878ffb2ee4a67f8c9d74
     while(getline(cin, str))
     {
         n = str.size();
@@ -116,6 +121,7 @@ int main()
                 cout << "1st " << tmp << " last_oper" << last_oper << endl;
                 flag = 1;
             }
+<<<<<<< HEAD
             else
             {
                 str_2_big(tmp, res, str_len);
@@ -134,6 +140,9 @@ int main()
             }
         }
         print_res();
+=======
+       }
+>>>>>>> e0bc4ba4b0b8873ecee8878ffb2ee4a67f8c9d74
     }
     return 0;
 }
