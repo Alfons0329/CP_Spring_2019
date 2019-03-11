@@ -30,14 +30,10 @@ void print_num(int in[MAX_NN])
 
 void str_2_big(string s, int in[MAX_NN], int str_len)
 {
+    memset(in, 0, sizeof(int) * MAX_NN);
     for(int i = 0; i < str_len; i++)
     {
         in[MAX_NN - i - 1] = s[str_len - i - 1] - '0';
-    }
-
-    for(int i = MAX_NN - str_len; i >= 0; i--)
-    {
-        in[i] = 0;
     }
     // printf("from str2_big str_len %d", str_len);
     // print_num(in);
