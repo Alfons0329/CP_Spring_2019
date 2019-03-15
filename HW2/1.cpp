@@ -42,6 +42,8 @@ int main()
     ll minl_bound = INF, maxr_bound = -INF;
     ll tmp_l = 0, tmp_r = 0;
     ll tmp; // for keep eating the subset
+    unordered_map<ll, ll> m;
+    ll cnt;
     while(tc--)
     {
         // read n l r
@@ -67,63 +69,36 @@ int main()
         }
 
         // n *= 2;
-        unordered_map<ll, ll> mymap;
 
-        minl_bound = INF, maxr_bound = -INF;
-        tmp_l = 0, tmp_r = 0;
-
+        tmp_l = l, tmp_r = r;
+        ll ans = r;
+        cnt = 0;
         while(n--)
         { 
             scanf("%lld", &tmp);
-            // printf("tmp = %lld\n", tmp);
+            tmp_l = tmp - 1;
 
-            if(mymap[tmp] == 0)
+            if(tmp_l < ans && tmp_l > l && m[tmp_l] == 0)
             {
-                mymap[tmp]++;
-
-                if(mymap[tmp - 1] == 0)
-                {
-                    tmp_l = tmp - 1;
-                    if(minl_bound < l)
-                    {
-                        minl_bound = tmp_l;
-                    }
-                    else
-                    {
-                        minl_bound = min(minl_bound, tmp_l);
-                    }
-                    // printf("tmp_l %lld minl_bound %lld", tmp_l, minl_bound);
-                }
-                if(mymap[tmp + 1] == 0)
-                {
-                    tmp_r = tmp + 1;
-                    if(maxr_bound > r)
-                    {
-                        maxr_bound = tmp_r;
-                    }
-                    else
-                    {
-                        maxr_bound = max(maxr_bound, tmp_r);
-                    }
-                    // printf(" tmp_r %lld maxl_bound %lld", tmp_r, maxr_bound);
-                }
-                // printf("\n");
-            }
-            else
-            {
-                continue;
+                ans = tmp_l;
             }
 
+            if(m[tmp] == 0)
+            {
+                m[tmp]++;
+                cnt++;
+            }
         }
-
-        if(mymap.size() == n)
+        
+        if(cnt == r - l + 1)
         {
             printf("^v^\n");
         }
         else
         {
-            printf("%lld\n", maxr_bound);
+            printf("%lld\n", ans == r ? r : ans);
         }
+        m.clear();
     }
 
     return 0;
