@@ -1,6 +1,10 @@
-#include <bits/stdc++.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <math.h>
+#define min(a,b) (((a) < (b)) ? (a) : (b))
 #define ll long long
-using namespace std;
+
 int main()
 {
     // read # of testcases
@@ -18,9 +22,11 @@ int main()
             printf("%lld\n", r);
             continue;
         }
+
         // map
-        bool* m = new bool[n + 1]();
+        bool* m = calloc(n + 1, sizeof(bool)); //padding
         int array_len = min(n + 1, r - l + 1);
+        
         while(n--)
         { 
             scanf("%lld", &tmp);
@@ -51,7 +57,7 @@ int main()
         {
             printf("^v^\n");
         }
-        delete m;
+        free(m);
     }
 
     return 0;
