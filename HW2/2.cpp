@@ -5,9 +5,9 @@ using namespace std;
 int bin_search(int a[], int start, int end, int target)
 {
     int mid;
-    while(start <= end)
+    while(start < end)
     {
-        mid = start + (end - start) / 2; // prevent overflow
+        mid = start + ((end - start) >> 1); // prevent overflow
         if(a[mid] == target)
         {
             return mid;
@@ -36,7 +36,7 @@ int main()
         if(n == 0)
         {
             printf("0");
-            return 0;
+            continue;
         }
         static int a[MAX_N];
         int dp[MAX_N];
@@ -54,11 +54,11 @@ int main()
             {
                 dp[0] = a[i];
             }
-            else if(a[i] >= dp[res])
+            else if(a[i] > dp[res])
             {
                 dp[++res] = a[i];
             }
-            else
+            else if(a[i] > dp[0] && a[i] < dp[res])
             {
                 dp[bin_search(dp, 0, res, a[i])] = a[i];
             }
