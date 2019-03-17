@@ -1,25 +1,23 @@
 #include<bits/stdc++.h>
 
 using namespace std;
-int res;
-int cal(const vector<int> &seq){
+
+int cal(const vector<int> &seq, int res){
     vector<int> ans;
     for (int x : seq){
         if(ans.empty() || ans.back() < x){
             ans.push_back(x);
         }
     }
-
-    if(ans.size() > res)
+    if(1)
     {
-        printf("Update res to %d ", ans.size());
-        for(int it : ans)
+        printf("Increasing seq: ");
+        for(int x : ans)
         {
-            printf("%d ", it);
+            printf("%d ", x);
         }
         printf("\n");
     }
-    
     return ans.size();
 }
 
@@ -33,13 +31,13 @@ int main(){
         for(int i = 0 ; i < n ; i++){
             scanf("%d", &a[i]);
         }
-        res = 0;
+        int ans = 0;
         for(int l = 0 ; l < n ; l++){
             for(int r = l ; r < n ; r++ ){
-                res = max (res, cal(vector<int>(a+l, a+r+1)));
+                ans = max (ans, cal(vector<int>(a+l, a+r+1), ans));
             }
         }
-        printf("%d\n", res);
+        printf("%d\n", ans);
     }
     return 0;
 }

@@ -21,8 +21,10 @@ int main()
         {
             scanf("%d", &a[i]);
         }
-        
+
         dp.push_back(a[0]);
+        int res = 0;
+
         for(int i = 1; i < n; i++)
         {
 
@@ -35,17 +37,15 @@ int main()
                 dp.clear();
                 dp.push_back(a[i]);
             }
-            else
+            /*printf("current size %lu\n", dp.size());
+            for(int it : dp)
             {
-                *lower_bound(dp.begin(), dp.end(), a[i]) = a[i];
+                printf("%d ", it);
             }
+            printf("\n");*/
+            res = max(res, (int)dp.size());
         }
-        printf("myres ");
-        for(int it : dp)
-        {
-            printf("%d ", it);
-        }
-        printf(" len %lu\n", dp.size());
+        printf("%d\n", res);
         dp.clear();
     }
     return 0;
