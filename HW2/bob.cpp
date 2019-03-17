@@ -9,9 +9,9 @@ int cal(const vector<int> &seq, int res){
             ans.push_back(x);
         }
     }
-    if(1)
+    if(ans.size() > res)
     {
-        printf("Increasing seq: ");
+        printf("Update seq: ");
         for(int x : ans)
         {
             printf("%d ", x);

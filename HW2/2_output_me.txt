@@ -1,0 +1,90 @@
+current size 1
+1 
+current size 2
+1 2 
+current size 3
+1 2 3 
+myres  len 3
+current size 1
+1 
+current size 2
+1 4 
+current size 3
+1 4 5 
+current size 3
+1 3 5 
+myres  len 3
+current size 1
+9 
+current size 1
+2 
+current size 2
+2 5 
+current size 2
+2 3 
+current size 3
+2 3 7 
+current size 4
+2 3 7 101 
+current size 4
+2 3 7 18 
+myres  len 4
+current size 1
+11 
+current size 1
+7 
+current size 2
+7 16 
+current size 2
+7 10 
+current size 3
+7 10 13 
+current size 4
+7 10 13 22 
+current size 5
+7 10 13 22 30 
+current size 1
+6 
+current size 2
+6 28 
+current size 2
+6 23 
+current size 2
+6 8 
+current size 3
+6 8 18 
+current size 1
+4 
+current size 1
+3 
+current size 2
+3 29 
+current size 2
+3 5 
+current size 3
+3 5 20 
+current size 4
+3 5 20 27 
+current size 4
+3 5 9 27 
+current size 4
+3 5 9 14 
+current size 4
+3 5 9 12 
+current size 1
+1 
+current size 2
+1 25 
+current size 3
+1 25 26 
+current size 3
+1 24 26 
+current size 3
+1 17 26 
+current size 3
+1 17 21 
+current size 3
+1 17 19 
+current size 3
+1 2 19 
+myres  len 3
