@@ -9,6 +9,7 @@ int cal(const vector<int> &seq, int res){
             ans.push_back(x);
         }
     }
+    /*
     if(ans.size() > res)
     {
         printf("Update seq: ");
@@ -18,6 +19,7 @@ int cal(const vector<int> &seq, int res){
         }
         printf("\n");
     }
+    */
     return ans.size();
 }
 

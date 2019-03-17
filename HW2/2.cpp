@@ -22,31 +22,19 @@ int main()
             scanf("%d", &a[i]);
         }
 
-        dp.push_back(a[0]);
-        int res = 0;
-
-        for(int i = 1; i < n; i++)
+        dp.push_back(INT_MAX); // padding
+        
+        int res = 1;
+        for(int i = n - 1; i >= 0; i--)
         {
-
-            if(a[i] > dp.back())
+            while(dp.back() <= a[i])
             {
-                dp.push_back(a[i]);
+                dp.pop_back();
             }
-            else if(a[i] < dp[0])
-            {
-                dp.clear();
-                dp.push_back(a[i]);
-            }
-            /*printf("current size %lu\n", dp.size());
-            for(int it : dp)
-            {
-                printf("%d ", it);
-            }
-            printf("\n");*/
-            res = max(res, (int)dp.size());
+            dp.push_back(a[i]);
+            res = max(res, (int)dp.size() - 1);
         }
         printf("%d\n", res);
-        dp.clear();
     }
     return 0;
 }
