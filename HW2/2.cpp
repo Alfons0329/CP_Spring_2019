@@ -30,12 +30,22 @@ int main()
             {
                 dp.push_back(a[i]);
             }
+            else if(a[i] < dp[0])
+            {
+                dp.clear();
+                dp.push_back(a[i]);
+            }
             else
             {
                 *lower_bound(dp.begin(), dp.end(), a[i]) = a[i];
             }
         }
-        printf("%lu\n", dp.size());
+        printf("myres ");
+        for(int it : dp)
+        {
+            printf("%d ", it);
+        }
+        printf(" len %lu\n", dp.size());
         dp.clear();
     }
     return 0;
