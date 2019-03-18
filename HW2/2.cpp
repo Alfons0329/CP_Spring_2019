@@ -15,23 +15,23 @@ int main()
             continue;
         }
         vector<int> a(n, 0);
-        vector<int> dp;
+        stack<int> dp;
 
         for(int i = 0 ; i < n ; i++)
         {
             scanf("%d", &a[i]);
         }
 
-        dp.push_back(INT_MAX); // padding
+        dp.push(INT_MAX); // padding
         
         int res = 1;
         for(int i = n - 1; i >= 0; i--)
         {
-            while(dp.back() <= a[i])
+            while(dp.top() <= a[i])
             {
-                dp.pop_back();
+                dp.pop();
             }
-            dp.push_back(a[i]);
+            dp.push(a[i]);
             res = max(res, (int)dp.size() - 1);
         }
         printf("%d\n", res);
