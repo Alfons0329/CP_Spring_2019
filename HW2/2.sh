@@ -12,4 +12,7 @@ diff 2_output_me.txt 2_output_bob.txt
 if [ $? -ne 0 ];
 then
     vimdiff 2_output_me.txt 2_output_bob.txt
+else
+    echo "AC"
 fi
+
