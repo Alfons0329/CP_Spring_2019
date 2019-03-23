@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-const int MAX_N = 2e7;
+const int MAX_N = 2e2;
 using namespace std;
 int main()
 {
@@ -7,9 +7,10 @@ int main()
     cin.tie(0);
 
     int D, Q;
-    scanf("%d" ,&D);
-    int m[MAX_N] = {0};
-    string s;
+    cin >> D;
+
+    unordered_map<string, int> m;
+    string s, tmp;
     
     int T = D;
     int n = 0;
@@ -17,32 +18,19 @@ int main()
     {
         cin >> s;
         n = s.size();
+        tmp = "";
         for(int i = 0; i < n; i++)
         {
-            if(s[i] == '0')
-            {
-                m[i * 2]++;
-            }
-            else
-            {
-                m[i * 2 + 1]++;
-            }
+            tmp += s[i];
+            m[tmp]++;
         }
     }
     
-    scanf("%d", &Q);
+    cin >> Q;
     while(Q--)
     {
         cin >> s;
-        n = s.size();
-        if(s[n - 1] == '0')
-        {
-            printf("%d\n", m[2 * (n - 1)]);
-        }
-        else
-        {
-            printf("%d\n", m[2 * (n - 1) + 1]);
-        }
+        cout << m[s] << '\n';
     }
     
     return 0;
