@@ -1,23 +1,6 @@
 #include <bits/stdc++.h>
-
+const int MAX_N = 2e7;
 using namespace std;
-bool mycompare(const string& s1, const string& s2)
-{
-    return s1.size() > s2.size();
-}
-bool prefix_match(const string& s1, const string& s2)
-{
-    int n = s1.size() == s2.size() ? s1.size() : min(s1.size(), s2.size());
-    for(int i = 0; i < n; i++)
-    {
-        if(s1[i] != s2[i])
-        {
-            return false;
-        }
-    }
-    // cout << s1 << " , " << s2 << " prefix prefix_match \n";
-    return true;
-}
 int main()
 {
     ios_base::sync_with_stdio(false);
@@ -25,34 +8,41 @@ int main()
 
     int D, Q;
     scanf("%d" ,&D);
-    unordered_map<string, int>m;
-    string str;
+    int m[MAX_N] = {0};
+    string s;
     
-    while(D--)
+    int T = D;
+    int n = 0;
+    while(T--)
     {
-        cin >> str;
-        m[str]++;
-    }
-
-    // process the dictionary
-    
-    for(unordered_map<string, int>::iterator i = m.begin(); i != m.end(); i++)
-    {
-        
-        for(unordered_map<string, int>::iterator j = m.begin(); j != m.end(); j++)
+        cin >> s;
+        n = s.size();
+        for(int i = 0; i < n; i++)
         {
-            if(i -> first.size() < j -> first.size() && i -> first != j -> first && prefix_match(i -> first, j -> first))
+            if(s[i] == '0')
             {
-                m[i -> first]++;
-                // cout << i -> first << " increment to  " << i -> second << " \n";  
+                m[i * 2]++;
+            }
+            else
+            {
+                m[i * 2 + 1]++;
             }
         }
     }
+    
     scanf("%d", &Q);
     while(Q--)
     {
-        cin >> str;
-        printf("%d\n", m[str]);
+        cin >> s;
+        n = s.size();
+        if(s[n - 1] == '0')
+        {
+            printf("%d\n", m[2 * (n - 1)]);
+        }
+        else
+        {
+            printf("%d\n", m[2 * (n - 1) + 1]);
+        }
     }
     
     return 0;
