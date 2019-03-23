@@ -39,7 +39,7 @@ void search(node* cur_node, const string& s)
     int n = s.size();
     for(int i = 0; i < n; i++)
     {
-        if(cur_node -> child[s[i] - '0'] == NULL) // no such string, new one
+        if(cur_node -> child[s[i] - '0'] == NULL) // no such string
         {
             cout << 1 << '\n';
             return;
@@ -55,12 +55,9 @@ int main()
     cin.tie(0);
 
     int T, Q;
+    string s;
     cin >> T;
-
-    unordered_map<string, int> m;
-    string s, tmp;
     
-    int n = 0;
     node* root = new node; // trie root
     root -> f = 0;
     root -> child[0] = root -> child[1] = NULL;
@@ -68,8 +65,6 @@ int main()
     while(T--)
     {
         cin >> s;
-        n = s.size();
-        tmp = "";
         insert(root, s);
     }
     
