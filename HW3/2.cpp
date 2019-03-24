@@ -8,7 +8,7 @@ bool mymap[MAX_N][MAX_M];
 
 int solve(const int& r, const int& c)
 {
-    if(r < max_r && c < max_c)
+    if((r < max_r && c <= max_c) || (r <= max_r && c < max_c))
     {
         return 0;
     }
@@ -30,7 +30,15 @@ int solve(const int& r, const int& c)
         }
     }
     
-    mymap[r][c] = true;
+    for(int i = r; i >= r_1; i--)
+    {
+        mymap[i][c] = true;
+    }
+    
+    for(int j = c; j >= c_1; j--)
+    {
+        mymap[r][j] = true;
+    }
     // cout << "r " << r << "c " << c << "r_1 " << r_1 << "c_1 " << c_1 << '\n';
     return r * c - (r * c_1 + c * r_1 - min(r, r_1) * min(c, c_1));
 }
@@ -47,13 +55,12 @@ int main()
     int res;
 
     max_r = max_c = 0;
-    // memset(mymap, false, sizeof(bool) * MAX_M * MAX_N);
     while(q--)
     {
         cin >> r >> c;
         res = solve(r, c);
         max_r = max(r, max_r);
-        max_c = max(r, max_c);
+        max_c = max(c, max_c);
         if(res)
         {
             cout << res << endl;
