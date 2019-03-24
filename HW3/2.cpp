@@ -1,44 +1,38 @@
 #include <bits/stdc++.h>
+#define MAX_N 1001
+#define MAX_M 1001
 using namespace std;
-int row_max, col_max;
-unordered_map<int, bool> mymap;
 
-int solve(const int& r, const int& c, const int& n, const int& m)
+int max_r, max_c;
+bool mymap[MAX_N][MAX_M];
+
+int solve(const int& r, const int& c)
 {
-    if(mymap[r * m + c])
+    if(r < max_r && c < max_c)
     {
         return 0;
     }
-    int end_r = r;
-    int end_c = c;
-    while(--end_r >= 1)
+
+    int r_1 = r, c_1 = c;
+    for(; r_1 > 0; r_1--)
     {
-        if(mymap[end_r * m + c])
+        if(mymap[r_1][c] == true)
         {
             break;
         }
     }
 
-    while(--end_c >= 1)
+    for(; c_1 > 0; c_1--)
     {
-        if(mymap[r * m + end_c])
+        if(mymap[r][c_1] == true)
         {
             break;
         }
     }
     
-    // cout << "end_r " << end_r << " ,  end_c " << end_c << '\n' ;
-
-    int res = 0;
-    for(int i = r; i > end_r; i--)
-    {
-        for(int j = c; j > end_c; j--)
-        {
-            res++;
-            mymap[i * m + j] = 1;
-        }
-    }
-    return res;
+    mymap[r][c] = true;
+    // cout << "r " << r << "c " << c << "r_1 " << r_1 << "c_1 " << c_1 << '\n';
+    return r * c - (r * c_1 + c * r_1 - min(r, r_1) * min(c, c_1));
 }
 
 int main()
@@ -47,15 +41,19 @@ int main()
     cin.tie(0);
     
     int n, m ,q, total, r, c;
-    row_max = col_max = 0;
+    max_r = max_c = 0;
     cin >> n >> m >> q;
     total = n * m;
     int res;
 
+    max_r = max_c = 0;
+    // memset(mymap, false, sizeof(bool) * MAX_M * MAX_N);
     while(q--)
     {
         cin >> r >> c;
-        res = solve(r, c, n, m);
+        res = solve(r, c);
+        max_r = max(r, max_r);
+        max_c = max(r, max_c);
         if(res)
         {
             cout << res << endl;
