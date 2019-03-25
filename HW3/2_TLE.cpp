@@ -51,4 +51,5 @@ int main()
     cout << total << '\n';
 
     return 0;
+
 }
