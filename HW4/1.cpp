@@ -1,11 +1,11 @@
 #include <bits/stdc++.h>
 using namespace std;
-void solve(const string& str)
+unordered_map<string, int> m;
+vector<string> order;
+void collect(const string& str)
 {
     string w_split;
     stringstream ss(str);
-    unordered_map<string, int> m;
-    vector<string> order;
     while(ss >> w_split)
     {
         string::iterator it = w_split.begin();
@@ -14,22 +14,33 @@ void solve(const string& str)
         {
             if(!isalpha(*it))
             {
-                break;
+                if(m.count(pu) == 0 && isalpha(pu[0]))
+                {
+                    order.push_back(pu);
+                }
+
+                if(isalpha(pu[0]))
+                {
+                    m[pu]++;
+                }
+                pu = "";
             }
-            pu += tolower(*it);
+            else if(isalpha(*it))
+            {
+                pu += tolower(*it);
+            }
             ++it;
         }
 
-        if(m.count(pu) == 0)
+        if(m.count(pu) == 0 && isalpha(pu[0]))
         {
             order.push_back(pu);
         }
-        m[pu]++;
-    }
 
-    for(auto i : order)
-    {
-        cout << i << ' ' << m[i] << endl;
+        if(isalpha(pu[0]))
+        {
+            m[pu]++;
+        }
     }
 
 }
@@ -40,7 +51,13 @@ int main()
     string str;
     while(getline(cin, str))
     {
-        solve(str);
+        collect(str);
     }
+
+    for(auto i : order)
+    {
+        cout << i << ' ' << m[i] << endl;
+    }
+
     return 0;
 }
