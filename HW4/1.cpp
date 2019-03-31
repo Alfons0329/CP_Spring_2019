@@ -10,22 +10,10 @@ void collect(const string& str)
     {
         string::iterator it = w_split.begin();
         string pu;
+        cout << "wsplit[" << w_split << "]\n"; 
         while(it != w_split.end())
         {
-            if(!isalpha(*it))
-            {
-                if(m.count(pu) == 0 && isalpha(pu[0]))
-                {
-                    order.push_back(pu);
-                }
-
-                if(isalpha(pu[0]))
-                {
-                    m[pu]++;
-                }
-                pu = "";
-            }
-            else if(isalpha(*it))
+            if(isalpha(*it))
             {
                 pu += tolower(*it);
             }
@@ -36,27 +24,23 @@ void collect(const string& str)
         {
             order.push_back(pu);
         }
-
-        if(isalpha(pu[0]))
-        {
-            m[pu]++;
-        }
+        m[pu]++;
     }
-
 }
+
 int main()
 {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     string str;
-    while(getline(cin, str))
+    while(cin >> str)
     {
         collect(str);
     }
 
     for(auto i : order)
     {
-        cout << i << ' ' << m[i] << endl;
+        cout << i << ' ' << m[i] << '\n';
     }
 
     return 0;
