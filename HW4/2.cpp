@@ -19,8 +19,20 @@ void triangle(double& x1, double& y1, double& x2, double& y2, double& x3, double
 
 void line(double& x1, double& y1, double& x2, double& y2, double& x3, double& y3)
 {
-    double x = (x1 + x2 + x3) / 3.0f;
-    double y = (y1 + y2 + y3) / 3.0f;
+    set<pair<int, int>> spi;
+    spi.insert(make_pair(x1, y1));
+    spi.insert(make_pair(x2, y2));
+    spi.insert(make_pair(x3, y3));
+    int n = spi.size();
+    double x = 0.0f, y = 0.0f;
+    
+    for(auto i : spi)
+    {
+        x += i.first;
+        y += i.second;
+    }
+    x /= (double)n;
+    y /= (double)n;
     cout << x << ' ' << y << ' ' << sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1)) << '\n'; 
 }
 
