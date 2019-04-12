@@ -11,46 +11,54 @@ int main()
     map<int, int> col_row;
     cin >> n >> m >> q;
     total = n * m;
-    ull res;
 
     col_row[0] = 0;
 
     while(q--)
     {
         cin >> r >> c;
-        printf("r %d c %d\n", r, c);
-        res = r * c;
-        col_row[c] = r;
-        map<int, int>::iterator it = col_row.begin();
+        ull res = r * c, delta = 0;
+        bool can_eat = 1;
+        // printf("r %llu c %llu\n", r, c);
 
-        ull last_col = it -> first, sz = 0;
-        it++;
-        bool flg = 1;
+        map<int, int>::iterator it = col_row.begin();
         for(; it != col_row.end(); it++)
         {
-
-            if(res < (it -> first - last_col) * (it -> second))
+            if(r <= it -> second && c <= it ->first)
             {
-                flg = 0;
+                can_eat = 0;
+                res = 0;
                 break;
             }
-
-            printf("res %llu itf %llu, last_col %llu its %llu \n", res, it -> first, last_col, it ->second);
-            res -= (it -> first - last_col) * it -> second;
-            last_col = it -> first;
         }
 
-        if(flg)
+        if(can_eat)
         {
+            it = col_row.begin();
+            ull last_col = 0;
+            for(; it != col_row.end(); it++)
+            {
+                delta += (min(c, (ull)it -> first) - last_col) * min((ull)it -> second, r);
+                // printf("delta %llu itf %llu, last_col %llu its %llu \n", delta, it -> first, last_col, it ->second);
+                last_col = it -> first;
+            }
+
+            // update map
             it = col_row.begin();
             for(; it != col_row.end(); it++)
             {
-                if (it -> first < c && it -> second < r)
+                if(r >= it -> second && c >= it -> first)
                 {
                     col_row.erase(it -> first);
                 }
             }
+            col_row[c] = r;
+            
+            res -= delta;
+        }
 
+        if(res > 0)
+        {
             cout << res << '\n';
             total -= res;
         }
@@ -58,8 +66,8 @@ int main()
         {
             cout << "QAQ" << '\n';
         }
+
     }
     cout << total << '\n';
-    // // printf("---------------\n");
     return 0;
 }
