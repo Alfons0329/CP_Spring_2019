@@ -3,11 +3,6 @@
 #define pii pair<int, int>
 using namespace std;
 
-bool compare(int& a, int& b)
-{
-    return a < b;
-}
-
 pii find_need(vi& v)
 {
     int r_most = -1, cei = -1, n = v.size();
@@ -30,7 +25,6 @@ pii find_need(vi& v)
                 cei = i;
             }
         }
-        // printf("r_most val %d cei val %d\n", v[r_most], v[cei]);
     }
 
     return make_pair(r_most, cei);
