@@ -309,3 +309,306 @@ int main()
     return 0;
 }
 ```
+
+## 20190322, HW3
+### [Binary String](https://oj.nctu.me/problems/825/)
+
+* Thought: By using the dedicated data structure "trie" to accomplish string prefix matching in O(N) time, for more idea, see the comments.
+* Analysis:
+    * Time complexity: $O(N)$
+    * Space complexity: $O(N)$
+    
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+struct node
+{
+    int f;
+    bool is_end;
+    node* child[2];
+
+};
+
+node* create_node()
+{
+    node* new_node = new node;
+    new_node -> f = 0; // init the freq to 0 up to the prefix node
+    new_node -> is_end = 0; // is the end of string
+    new_node -> child[0] = new_node -> child[1] = NULL; // next left and right
+
+    return new_node;
+}
+
+void insert(node* cur_node, const string& s)
+{
+    int n = s.size();
+    for(int i = 0; i < n; i++)
+    {
+        if(cur_node -> child[s[i] - '0'] == NULL)
+        {
+            cur_node -> child[s[i] - '0'] = create_node();
+        } // create the node if that path of prefix matching does not exist
+        cur_node = cur_node -> child[s[i] - '0']; // move to the next node
+        cur_node -> f++; // increase the freq of path
+    }
+
+    cur_node -> is_end = 1; // finish inserting
+}
+
+void search(node* cur_node, const string& s)
+{
+    int n = s.size();
+    for(int i = 0; i < n; i++)
+    {
+        if(cur_node -> child[s[i] - '0'] == NULL) // no such string
+        {
+            cout << 1 << '\n';
+            return;
+        }
+        cur_node = cur_node -> child[s[i] - '0'];
+    }
+    cout << cur_node -> f << '\n';
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+
+    int T, Q;
+    string s;
+    cin >> T;
+    
+    node* root = new node; // trie root
+    root -> f = 0;
+    root -> child[0] = root -> child[1] = NULL;
+
+    while(T--)
+    {
+        cin >> s;
+        insert(root, s);
+    }
+    
+    cin >> Q;
+    while(Q--)
+    {
+        cin >> s;
+        search(root, s);
+    }
+    
+    return 0;
+}
+```
+
+### [Chocolate! Chocolate!!](https://oj.nctu.me/problems/825/)
+* Thought: DFS the map, and mark the eaten grid so the infinite recusrion will not happen.
+* Analysis:
+    * Time complexity: $O(m * n)$ eventully up to m * n grid of chocolate will be eaten
+    * Space complexity: $O(m * n)$ by using the map to trace grids that have been eaten
+```cpp
+#include <bits/stdc++.h>
+#define MAX_N 1001
+#define MAX_M 1001
+using namespace std;
+
+int res; 
+bool mymap[MAX_N][MAX_M];
+
+void solve(int r, int c, const int& n, const int& m)
+{
+    if(r > n || c > m || r < 1 || c < 1 || mymap[r][c])
+    {
+        return;
+    }
+    mymap[r][c] = true;
+    res++;
+    // cout << "visit: " << r << " , " << c << " res now " << res << '\n';
+    solve(r - 1, c - 1, n, m);
+    solve(r - 1, c, n, m);
+    solve(r, c - 1, n, m);
+}
+
+int main()
+{    
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    
+    int n, m ,q, total, r, c;
+    cin >> n >> m >> q;
+    total = n * m;
+
+    while(q--)
+    {
+        cin >> r >> c;
+        res = 0;
+        solve(r, c, n, m);
+        if(res)
+        {
+            cout << res << endl;
+        }
+        else
+        {
+            cout << "QAQ" << '\n';
+        }
+        total -= res;
+    }
+    cout << total << '\n';
+
+    return 0;
+}
+```
+## 20190329, HW4
+### [Novelist](https://oj.nctu.me/problems/829/)
+* Thought: By using `getline + stringstream` to remove blank b/w each string or directly use `cin >>` to avoid while space. After that, just concatenate the alphabetical letters togethers and store them into the map to count occurances;
+* Analysis:
+    * Time complexity: $O(N)$ by iterating from the begin of input to the end
+    * Space complexity: $O(N)$ where N is the total length of input, and we use the unordered_map to store different string in it.
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+unordered_map<string, int> m;
+vector<string> order;
+void collect(string& str)
+{
+    string::iterator it = str.begin();
+    string pu;
+    while(it != str.end())
+    {
+        if(isalpha(*it))
+        {
+            pu += tolower(*it);
+        }
+        ++it;
+    }
+    if(m.count(pu) == 0 && isalpha(pu[0]))
+    {
+        order.push_back(pu);
+    }
+    m[pu]++;
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    string str;
+    while(cin >> str)
+    {
+        collect(str);
+    }
+
+    for(auto i : order)
+    {
+        cout << i << ' ' << m[i] << '\n';
+    }
+
+    return 0;
+}
+```
+
+### [Base Station](https://oj.nctu.me/problems/830/)
+* Thought: 
+    * Step 1. There are two kinds of the situation, one is by using the 2 of 3 points, the middle point of 2 forms the centre of circle, the other one is using the **Circumscribed circle** of 3 points iff they does not lie on the same line. 
+    * Step 2. Comparing the radius, print the least one and corresponding center.
+
+* Analysis:
+    * Time complexity: $O(1)$ but lies on the floating point computation
+    * Space complexity: $O(1)$.
+```cpp
+#include <bits/stdc++.h>
+#include <cfloat>
+#define pb push_back
+#define mp make_pair
+#define spdd set<pair<double, double>>
+#define vpdd vector<pair<double, double>>
+#define pdd pair<double, double>
+using namespace std;
+
+struct p_r
+{
+    pdd c;
+    double r;
+};
+
+double len(double x1, double y1, double x2, double y2)
+{
+    return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+}
+
+bool same_line(double x1, double y1, double x2, double y2, double x3, double y3)
+{
+    return ((y2 - y1) * (x3 - x2)) == ((y3 - y2) * (x2 - x1));
+}
+
+p_r triangle(double x1, double y1, double x2, double y2, double x3, double y3)
+{ 
+    double a1=2.0f*(x2-x1);
+    double b1=2.0f*(y2-y1);
+    double c1=x2*x2+y2*y2-x1*x1-y1*y1;
+
+    double a2=2.0f*(x3-x2);
+    double b2=2.0f*(y3-y2);
+    double c2=x3*x3+y3*y3-x2*x2-y2*y2;
+
+    double x=(c1*b2-c2*b1)/(a1*b2-a2*b1);
+    double y=(a1*c2-a2*c1)/(a1*b2-a2*b1);
+
+    p_r tmp;
+    tmp.r = sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1));
+    tmp.c = make_pair(x, y);
+    return tmp;
+}
+
+p_r two_one(double& x1, double& y1, double& x2, double& y2, double& x3, double& y3)
+{
+    double r = len(x1, y1, x2, y2) / 2.0f;
+    double x = (x1 + x2) / 2.0f;
+    double y = (y1 + y2) / 2.0f;
+    
+    p_r tmp;
+    if(len(x, y, x3, y3) <= r) //can be covered
+    {
+        
+        tmp.r = sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1));
+        tmp.c = make_pair(x, y);
+        return tmp;
+    }
+    else
+    {
+        p_r tmp;
+        tmp.r = FLT_MAX;
+        tmp.c = make_pair(x, y);
+        return tmp;
+    }
+}
+
+bool cmp(p_r p1, p_r p2)
+{
+    return p1.r < p2.r;
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+
+    double x1, x2, x3, y1, y2, y3;
+    while(scanf("%lf %lf %lf %lf %lf %lf", &x1, &y1, &x2, &y2, &x3, &y3) != EOF)
+    {
+        vector<p_r> vpr;
+        vpr.resize(3);
+        vpr[0] = two_one(x1, y1, x2, y2, x3, y3);
+        vpr[1] = two_one(x1, y1, x3, y3, x2, y2);
+        vpr[2] = two_one(x2, y2, x3, y3, x1, y1);
+
+        
+        if(!same_line(x1, y1, x2, y2, x3, y3))
+        {
+            vpr.pb(triangle(x1, y1, x2, y2, x3, y3));
+        }
+        sort(vpr.begin(), vpr.end(), cmp);
+        cout << fixed << setprecision(6) << vpr[0].c.first << ' ' << vpr[0].c.second << ' ' << vpr[0].r<< '\n';
+    } 
+    return 0;
+}
+`
