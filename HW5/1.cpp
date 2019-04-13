@@ -40,6 +40,10 @@ int main()
             {
                 delta += (min(c, (ull)it -> first) - last_col) * min((ull)it -> second, r);
                 // printf("delta %llu itf %llu, last_col %llu its %llu \n", delta, it -> first, last_col, it ->second);
+                if(it -> first > c)
+                {
+                    break;
+                }
                 last_col = it -> first;
             }
 
