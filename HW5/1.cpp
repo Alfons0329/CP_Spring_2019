@@ -8,7 +8,7 @@ int main()
     cin.tie(0);
 
     ull n, m ,q, total, r, c;
-    map<int, int> col_row;
+    map<ull, ull> col_row;
     cin >> n >> m >> q;
     total = n * m;
 
@@ -17,16 +17,13 @@ int main()
     while(q--)
     {
         cin >> r >> c;
-        ull res = r * c, delta = 0;
+        r = min(r, n);
+        c = min(c, m);
+        ull res = r * c, delta = 0; 
         bool can_eat = 1;
         // printf("r %llu c %llu\n", r, c);
 
-        map<int, int>::iterator it = col_row.begin();
-        if(r >= n && c >= m)
-        {
-            res = total > 0 ? total : 0;
-            can_eat = 0;
-        }
+        map<ull, ull>::iterator it = col_row.begin();
 
         for(; it != col_row.end(); it++)
         {
@@ -78,6 +75,6 @@ int main()
         }
 
     }
-    cout << total << '\n';
+    cout << total;
     return 0;
 }
