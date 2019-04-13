@@ -22,6 +22,12 @@ int main()
         // printf("r %llu c %llu\n", r, c);
 
         map<int, int>::iterator it = col_row.begin();
+        if(r >= n && c >= m)
+        {
+            res = total > 0 ? total : 0;
+            can_eat = 0;
+        }
+
         for(; it != col_row.end(); it++)
         {
             if(r <= it -> second && c <= it ->first)
@@ -63,8 +69,8 @@ int main()
 
         if(res > 0)
         {
-            cout << res << '\n';
-            total -= res;
+            cout << min(m * n, res) << '\n';
+            total -= min(m * n, res);
         }
         else
         {
