@@ -55,7 +55,6 @@ int main()
         l[1] = len(x1, y1, x3, y3); 
         l[2] = len(x3, y3, x2, y2);
         sort(l.begin(), l.end());
-        // printf("l0 %lf l1 %lf l2 %lf\n", l[0], l[1], l[2]);
 
         if(l[0] + l[1] > l[2]) // is triangle
         {
