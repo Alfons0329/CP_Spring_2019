@@ -3,21 +3,8 @@
 #define vb vector<bool>
 #define pb push_back
 #define MIN -100005
+#define MAX_N 1000001
 using namespace std;
-void print_cpu(vi g_order, unordered_map<int, stack<int>> cpu)
-{
-    printf("CPU: ");
-    for(auto i : g_order)
-    {
-        stack<int> s2(cpu[i]);
-        while(s2.size())
-        {
-            cout << s2.top() << ' ';
-            s2.pop();
-        }
-    }
-    printf("\n");
-}
 int main()
 {
     ios_base::sync_with_stdio(false);
@@ -29,11 +16,12 @@ int main()
 
     vi v;
     v.pb(MIN);
-    vi g_order;
-    int order_begin = 0; 
-    vb in_cpu(n + 1, 0);
-    unordered_map<int, int> in_cpu_g;
-    unordered_map<int, stack<int>> cpu; // gid -> process stk
+    
+    queue<int> g_order;
+    bool* in_cpu = (bool*) calloc(n + 1, sizeof(in_cpu));
+    vector<stack<int>> cpu; // gid -> process stk
+    cpu.resize(n + 1);
+    int order_begin = 0, order_end = 0; 
 
     while(n--)
     {
@@ -45,7 +33,6 @@ int main()
     while(q--)
     {
         cin >> op1; 
-        // printf("op1 %d order_begin %d", op1, order_begin); 
         if(op1 == 1)
         {
             cin >> op2;
@@ -60,29 +47,27 @@ int main()
             }
             else
             {
-                if(in_cpu_g.count(v[op2]) == 0) // havent such gruop in it
+                if(cpu[v[op2]].size() == 0) // havent such gruop in it
                 {
-                    g_order.pb(v[op2]);
-                    in_cpu_g[v[op2]] = 1;
+                    g_order.push(v[op2]);
                 }
                 cpu[v[op2]].push(op2);
-                // print_cpu(g_order, cpu);
                 in_cpu[op2] = 1;
                 cout << "Successful" << '\n';
             }
         }
         else
         {
-            if(in_cpu_g.size())
+            if(g_order.size())
             {
-                cout << cpu[g_order[order_begin]].top() << '\n';
-                in_cpu[cpu[g_order[order_begin]].top()] = 0;
-                cpu[g_order[order_begin]].pop();
+                // printf("g_order[begin] %d\n", g_order[order_begin]);
+                cout << cpu[g_order.front()].top() << '\n';
+                in_cpu[cpu[g_order.front()].top()] = 0;
+                cpu[g_order.front()].pop();
 
-                if(cpu[g_order[order_begin]].size() == 0) // popped out all the element of certain group
+                if(cpu[g_order.front()].size() == 0) // popped out all the element of certain group
                 {
-                    in_cpu_g.erase(g_order[order_begin]);
-                    order_begin++;
+                    g_order.pop();
                 }
             }
             else
@@ -92,6 +77,6 @@ int main()
         }
         // printf("\n");
     }
-
+    free(in_cpu);
     return 0;
 }
