@@ -17,7 +17,7 @@ int main()
     v.pb(MIN);
     deque<int> g_order; 
     vb in_cpu(n + 1, 0);
-    map<int, vector<int>> cpu; // gid -> process stk
+    map<int, stack<int>> cpu; // gid -> process stk
 
     while(n--)
     {
@@ -42,7 +42,7 @@ int main()
                 {
                     g_order.pb(v[op2]);
                 }
-                cpu[v[op2]].push_back(op2);
+                cpu[v[op2]].push(op2);
                 in_cpu[op2] = 1;
                 cout << "Successful" << '\n';
             }
@@ -52,10 +52,10 @@ int main()
             if(g_order.size())
             {
                 int g_id = g_order.front();
-				op2 = cpu[g_id].back();
+				op2 = cpu[g_id].top();
 				cout << op2 << '\n';
                 in_cpu[op2] = 0;
-                cpu[g_id].pop_back();
+                cpu[g_id].pop();
 
                 if(cpu[g_id].size() == 0)
                 {
