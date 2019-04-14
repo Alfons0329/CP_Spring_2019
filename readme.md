@@ -611,4 +611,199 @@ int main()
     } 
     return 0;
 }
+```
+ ## 20190405, HW5
+ ### [Extra Chocolate! ](https://oj.nctu.me/problems/843/) (Only AC 17/53 but cross validate with AC friend's tricky testcase, they are identical QQ)
+
+* Thought:
+    * Step 1. Define a map to store the col -> row correspondence **if successfully eat a chocolate** 
+    * Step 2. If such row, col (prepare-to-eat) <= one of the bite's position eaten before, then this location must been eaten before, hence Hank cannot eat this time, print QAQ
+    * Step 3. Sum each vertical xxx up (eaten before) from left to right
+to form the delta value (sum all the vertical bar of x till the position of ready-to-eat's column) this bears a resemblance to that of **Reimann Integral**
+    * For more detail, see the following demo and comment part of code since it is bit hard to explain thoroughly of the algorithm with plain words
+```
+xoooov ---> position want to eat
+xxoooo
+xxxooo
+xxxooo
+xxxxoo
+xxxxxx
+
+from the aforementioned step, the delta will sum up to 
+and total chocolate to eat this time will be row_pos of v * col_pos of v - delta(sum of x) being 36 - (6 + 5 + 4 + 2 + 1 + 1)
+```
+    
+* Analysis:
+    * Time complexity: $O(m)$, with m being the # of columns of chocolate since each time we move horizontally to manipulate the data.
+    * Space complexity: $O(m)$, and the reason is similar above, we store the data of correspondence of mapping eat_col -> eat_row
+
+```cpp
+#include <bits/stdc++.h>
+#define ull unsigned long long
+using namespace std;
+
+int main()
+{    
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+
+    ull n, m ,q, total, r, c;
+    map<ull, ull> col_row; // Step 1.
+    cin >> n >> m >> q;
+    total = n * m;
+
+    col_row[0] = 0;
+
+    while(q--)
+    {
+        cin >> r >> c;
+        r = min(r, n); // prevent out-of-bound like error
+        c = min(c, m); // prevent out-of-bound like error
+        ull res = r * c, delta = 0; 
+        bool can_eat = 1;
+        // printf("r %llu c %llu\n", r, c);
+
+        map<ull, ull>::iterator it = col_row.begin();
+
+        for(; it != col_row.end(); it++) // Step 2.
+        {
+            if(r <= it -> second && c <= it ->first)
+            {
+                can_eat = 0;
+                res = 0;
+                break;
+            }
+        }
+
+        if(can_eat)
+        {
+            // integrate from left, where min... - last_col down there represents the width of rectangle and min(ull it ->....r) represents the height
+            it = col_row.begin();
+            ull last_col = 0; // integral from left
+            for(; it != col_row.end(); it++) // step 3
+            {
+                delta += (min(c, (ull)it -> first) - last_col) * min((ull)it -> second, r); // the height limit is the row number of ready-to-eat part and the column part should iterate up to the col number of ready-to-eat, to form an integral
+                if(it -> first > c)
+                {
+                    break;
+                }
+                last_col = it -> first; // change to the column data of this rectangel and it++ to find the next border
+            }
+
+            // update map if current eating part is bigger than all the position that haven been eaten before, then use the right-up most to represent the eaten area will be enough
+            it = col_row.begin();
+            for(; it != col_row.end(); it++)
+            {
+                if(r >= it -> second && c >= it -> first)
+                {
+                    col_row.erase(it -> first);
+                }
+            }
+            col_row[c] = r;
+            
+            res -= delta;
+        }
+
+        if(res > 0)
+        {
+            cout << min(m * n, res) << '\n';
+            total -= min(m * n, res);
+        }
+        else
+        {
+            cout << "QAQ" << '\n';
+        }
+
+    }
+    cout << total;
+    return 0;
+}
+```
+
+### [K next permutations](https://oj.nctu.me/problems/844/)
+* Thought: 
+    * Step 1. Take the previously printed permutation and find the rightmost character in it, which is smaller than its next character. Let us call this character as ‘r_most’.
+    * Step 2. Now find the ceiling of the ‘r_most’. Ceiling is the smallest character on right of ‘r_most’, which is greater than ‘r_most’. Let us call the ceil character as ‘cei’.
+    * Step 3. Swap the two characters found in above 2 steps.
+    * Step 4. Sort the substring (in non-decreasing order) after the original index of ‘r_most’.
+    * Note: Initialize the r_most position to -1, and if nothing can satisfy the rule in step 1 and step 2, `ex: [5,4,3,2,1], [2,2,2,2,2], [7], since there are no position to satisfy v[i] < v[i + 1]`, r_most will remain -1 and output should be either `hello world` if next permutation has not been generated before or break from the while loop directly.
+* Analysis:
+    * Time complexity: $O(2 ^ n * n !)$, with n being the length of given integer vector. If we generated all the permutations without any interruption, time complexity will be this 
+    * Space complexity: $O(n)$, just store the input vector (array) 
+```cpp
+/*The variables' name are same with that in as above steps*/
+#include <bits/stdc++.h>
+#define vi vector<int>
+#define pii pair<int, int>
+using namespace std;
+
+pii find_need(vi& v)
+{
+    int r_most = -1, cei = -1, n = v.size();
+    for(int i = 0; i < n - 1; i++)
+    {
+        if(v[i] < v[i + 1])
+        {
+            r_most = i;
+        }
+    }
+
+    if(r_most >= 0)
+    {
+        int cei_value = INT_MAX;
+        for(int i = r_most + 1; i < n; i++)
+        {
+            if(v[i] < cei_value && v[i] > v[r_most])
+            {
+                cei_value = v[i];
+                cei = i;
+            }
+        }
+    }
+
+    return make_pair(r_most, cei);
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    
+    int n, k, tmp;
+    vi v;
+    cin >> n >> k;
+    while(n--)
+    {
+        cin >> tmp;
+        v.push_back(tmp);
+    }
+
+    int has_next = 0;
+    while(k--) 
+    {
+        pii p = find_need(v);
+        int r_most = p.first, cei = p.second;
+
+        if(r_most < 0) 
+        {
+            break;
+        }
+        has_next = 1;
+        swap(v[r_most], v[cei]);
+        sort(v.begin() + r_most + 1, v.end());
+        
+        for(auto i : v)
+        {
+            cout << i << ' ';
+        }
+        cout << '\n';
+    }
+
+    if(has_next == 0)
+    {
+        cout << "hello world!" << '\n';
+    }
+
+    return 0;
+}
 `
