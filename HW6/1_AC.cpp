@@ -29,8 +29,10 @@ int main()
 
     vi v;
     v.pb(MIN);
-    vi g_order; 
+    vi g_order;
+    int order_begin = 0; 
     vb in_cpu(n + 1, 0);
+    unordered_map<int, int> in_cpu_g;
     unordered_map<int, stack<int>> cpu; // gid -> process stk
 
     while(n--)
@@ -43,11 +45,10 @@ int main()
     while(q--)
     {
         cin >> op1; 
-        // printf("op1 %d", op1); 
+        // printf("op1 %d order_begin %d", op1, order_begin); 
         if(op1 == 1)
         {
             cin >> op2;
-            // printf("op2 %d", op2);
             if(op2 > g_size)
             {
                 cout << "Successful" << '\n';
@@ -59,9 +60,10 @@ int main()
             }
             else
             {
-                if(find(g_order.begin(), g_order.end(), v[op2]) == g_order.end()) // havent such gruop in it
+                if(in_cpu_g.count(v[op2]) == 0) // havent such gruop in it
                 {
                     g_order.pb(v[op2]);
+                    in_cpu_g[v[op2]] = 1;
                 }
                 cpu[v[op2]].push(op2);
                 // print_cpu(g_order, cpu);
@@ -71,18 +73,16 @@ int main()
         }
         else
         {
-            if(g_order.size())
+            if(in_cpu_g.size())
             {
-                cout << cpu[g_order.front()].top() << '\n';
-                in_cpu[cpu[g_order.front()].top()] = 0;
-                cpu[g_order.front()].pop();
+                cout << cpu[g_order[order_begin]].top() << '\n';
+                in_cpu[cpu[g_order[order_begin]].top()] = 0;
+                cpu[g_order[order_begin]].pop();
 
-                if(cpu[g_order.front()].size() == 0)
+                if(cpu[g_order[order_begin]].size() == 0) // popped out all the element of certain group
                 {
-                    if(g_order.size())
-                    {
-                        g_order.erase(g_order.begin());
-                    }
+                    in_cpu_g.erase(g_order[order_begin]);
+                    order_begin++;
                 }
             }
             else
