@@ -18,27 +18,32 @@ void get_ans(ull& l_most, ull& r_most, map<ull, ull> wh)
 {
     ull area = 0, len = 0; 
     ull n = v.size(), m = r_most - l_most, cover = 0;
-    map<ull, ull>::iterator it1 = wh.begin(); 
-    map<ull, ull>::iterator it2 = wh.rbegin(); 
-    for(ull i = 0; i < n; i++)
+    wh[v[0].x] = v[0].h;
+    wh[v[0].x + v[0].w] = v[0].h;
+
+    for(ull i = 1; i < n; i++)
     {
         ull spare = 0;
-        ull l = v[i].x, r = v[i].x + v[i].x;
-        it1 = wh.begin();
-        it2 = wh.rbegin(); 
-        if(l > it1 -> first && r < it2 -> first)
+        auto l = v[i].x, r = v[i].x + v[i].w, h = v[i].h;
+        auto l2 = wh.begin() -> first, r2 = wh.rbegin() -> first; 
+        printf("l2 %d r2 %d \n", l2, r2);
+        if(l < l2)
         {
-            continue;
+             wh[l] = h;
         }
-        wh[l] = wh[r] = v[i].h;
-        printf("update l %d r %d to h %d\n", l, r, v[i].h);
+
+        if(r > r2)
+        {
+            wh[r] = h;
+        }
+        printf("update l %llu r %llu to h %llu\n", l, r, h);
     }
     
-    it1 = wh.begin();
-    it2 = next(wh.begin());
+    auto it1 = wh.begin();
+    auto it3 = next(wh.begin());
     while(it1 != wh.end())
     {
-        ull w1 = it1 -> first, w2 = it2 -> first, h1 = it1 -> second, h2 = it2 -> second;
+        ull w1 = it1 -> first, w2 = it3 -> first, h1 = it1 -> second, h2 = it3 -> second;
         area += (w2 - w1) * (min(h2, h1));
 
         if(h2 == h1)
@@ -49,9 +54,9 @@ void get_ans(ull& l_most, ull& r_most, map<ull, ull> wh)
         {
             len += 2;
         }
-        // printf("area %d, len %d");
+        printf("w2 %llu w1 %llu h2 %llu h1 %llu area %llu\n", w2, w1, h2, h1, area);
         it1 = next(it1);
-        it2 = next(it2);
+        it3 = next(it3);
     }
 
     cout << len << ' ' << area;
