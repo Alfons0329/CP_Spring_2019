@@ -14,35 +14,30 @@ bool cmp(one_h a, one_h b)
     return a.h > b.h;
 }
 
-void get_ans(ull& l_most, ull& r_most, vector<ull>& wh_pair)
+void get_ans(ull& l_most, ull& r_most, vector<ull>& wh)
 {
     ull area = 0, len = 0; 
-    ull n = v.size(), m = wh_pair.size(), cover = 0;
-    for(ull i = 0; i < n; i++)
+    ull n = v.size(), m = wh.size(), cover = 0;
+    map<ull, pair<ull, ull>> wh2; // x -> (h, x + w)
+    wh2[v[0].x] = make_pair(v[0].h, v[0].x + v[0].w); 
+
+    for(ull i = 1; i < n; i++)
     {
-        if(cover + 1 >= m)
+        ull occupied = 0, xx = v[i].x, hh = v[i].h, xx2 = v[i].x + v[i].w;
+        auto it = wh2.begin();
+        while(it -> first > xx && it -> second -> second < xx2 || it != wh2.end())
         {
-            break;
+            it++;
+            occupied += it -> second -> second - it -> first;
         }
-        ull spare = 0;
-        for(ull j = v[i].x; j < v[i].x + v[i].w; j++)
-        {
-            if(wh_pair[j - l_most] != 0)
-            {
-                continue;
-            }
-            spare++;
-            wh_pair[j - l_most] = v[i].h;
-            cover++;
-        }
-        area += spare * v[i].h;
+        area += (ww - occupied) * hh;
     }
 
     ull local_start = l_most, local_max = 0;
     int flg = 0;
     for(ull i = l_most; i <= r_most; i++)
     {
-        if(wh_pair[i - l_most] == 0)
+        if(wh[i - l_most] == 0)
         {
             if(flg == 1)
             {
@@ -59,7 +54,7 @@ void get_ans(ull& l_most, ull& r_most, vector<ull>& wh_pair)
             {
                 local_start = i;
             }
-            local_max = max(wh_pair[i - l_most], (ull)local_max);
+            local_max = max(wh[i - l_most], (ull)local_max);
             flg = 1;
         }
     }
@@ -88,8 +83,8 @@ int main()
         r_most = max(x + w, r_most);
     }
 
-    vector<ull> wh_pair(r_most - l_most + 1, 0);
+    vector<ull> wh(r_most - l_most + 1, 0);
     sort(v.begin(), v.end(), cmp);
-    get_ans(l_most, r_most, wh_pair);
+    get_ans(l_most, r_most, wh);
     return 0;
 }

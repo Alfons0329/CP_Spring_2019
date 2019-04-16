@@ -26,16 +26,32 @@ void get_ans(ull& l_most, ull& r_most, map<ull, ull> wh)
         ull spare = 0;
         auto l = v[i].x, r = v[i].x + v[i].w, h = v[i].h;
         auto l2 = wh.begin() -> first, r2 = wh.rbegin() -> first; 
-        wh[l] = wh[r] = h;
         printf("l2 %d r2 %d \n", l2, r2);
+        if(l < l2)
+        {
+             wh[l] = h;
+             printf("update l %llu to h %llu\n", l, h);
+        }
+
+        if(r > r2)
+        {
+            wh[r] = h;
+            printf("update r %llu to h %llu\n", r, h);
+        }
     }
     
     auto it = wh.begin();
+    /*while(it != wh.end())
+    {
+        printf("it -> first %d \n", it -> first);
+        ++it;
+    }
+    it = wh.begin();*/
     auto it2 = next(wh.begin());
     while(it2 != wh.end())
     {
         ull w1 = it -> first, w2 = it2 -> first, h1 = it -> second, h2 = it2 -> second;
-        area += (w2 - w1) * (max(h2, h1));
+        area += (w2 - w1) * (min(h2, h1));
 
         if(h2 == h1)
         {
