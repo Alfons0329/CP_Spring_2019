@@ -26,25 +26,16 @@ void get_ans(ull& l_most, ull& r_most, map<ull, ull> wh)
         ull spare = 0;
         auto l = v[i].x, r = v[i].x + v[i].w, h = v[i].h;
         auto l2 = wh.begin() -> first, r2 = wh.rbegin() -> first; 
+        wh[l] = wh[r] = h;
         printf("l2 %d r2 %d \n", l2, r2);
-        if(l < l2)
-        {
-             wh[l] = h;
-        }
-
-        if(r > r2)
-        {
-            wh[r] = h;
-        }
-        printf("update l %llu r %llu to h %llu\n", l, r, h);
     }
     
-    auto it1 = wh.begin();
-    auto it3 = next(wh.begin());
-    while(it1 != wh.end())
+    auto it = wh.begin();
+    auto it2 = next(wh.begin());
+    while(it2 != wh.end())
     {
-        ull w1 = it1 -> first, w2 = it3 -> first, h1 = it1 -> second, h2 = it3 -> second;
-        area += (w2 - w1) * (min(h2, h1));
+        ull w1 = it -> first, w2 = it2 -> first, h1 = it -> second, h2 = it2 -> second;
+        area += (w2 - w1) * (max(h2, h1));
 
         if(h2 == h1)
         {
@@ -55,8 +46,8 @@ void get_ans(ull& l_most, ull& r_most, map<ull, ull> wh)
             len += 2;
         }
         printf("w2 %llu w1 %llu h2 %llu h1 %llu area %llu\n", w2, w1, h2, h1, area);
-        it1 = next(it1);
-        it3 = next(it3);
+        it = next(it);
+        it2 = next(it2);
     }
 
     cout << len << ' ' << area;
