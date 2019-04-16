@@ -18,9 +18,13 @@ bool cmp(one_h a, one_h b)
 void get_ans(ll& l_most, ll& r_most, vector<ll>& wh_pair)
 {
     ll area = 0, len = 0;
-    ll n = v.size();
+    ll n = v.size(), m = wh_pair.size(), cover = 0;
     for(ll i = 0; i < n; i++)
     {
+        if(cover >= m)
+        {
+            break;
+        }
         if(v[i].h == 0)
         {
             continue;
@@ -32,10 +36,9 @@ void get_ans(ll& l_most, ll& r_most, vector<ll>& wh_pair)
             {
                 continue;
             }
-
             spare++;
             wh_pair[j - l_most] = v[i].h;
-
+            cover++;
         }
         area += spare * v[i].h;
     }
