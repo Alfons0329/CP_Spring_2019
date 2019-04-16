@@ -10,6 +10,8 @@ int main()
     ull n, m ,q, total, r, c;
     map<ull, ull> col_row;
     cin >> n >> m >> q;
+    col_row[0] = m;
+    col_row[n + 1] = 0;
     total = n * m;
 
     col_row[0] = 0;
