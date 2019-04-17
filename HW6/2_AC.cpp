@@ -1,72 +1,16 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize ("O3")
-#define ull unsigned long long
+#define ll long long
 using namespace std;
 
 struct one_h
 {
-    ull x, h, w;
+    ll x, h;
+    bool in_type;
 };
 
-vector<one_h> v;
 bool cmp(one_h a, one_h b)
 {
-    return a.h > b.h;
-}
-
-void get_ans(ull& l_most, ull& r_most, map<ull, ull> wh)
-{
-    ull area = 0, len = 0; 
-    ull n = v.size(), m = r_most - l_most, cover = 0;
-    wh[v[0].x] = v[0].h;
-    wh[v[0].x + v[0].w] = v[0].h;
-
-    for(ull i = 1; i < n; i++)
-    {
-        ull spare = 0;
-        auto l = v[i].x, r = v[i].x + v[i].w, h = v[i].h;
-        auto l2 = wh.begin() -> first, r2 = wh.rbegin() -> first; 
-        printf("l2 %d r2 %d \n", l2, r2);
-        if(l < l2)
-        {
-             wh[l] = h;
-             printf("update l %llu to h %llu\n", l, h);
-        }
-
-        if(r > r2)
-        {
-            wh[r] = h;
-            printf("update r %llu to h %llu\n", r, h);
-        }
-    }
-    
-    auto it = wh.begin();
-    /*while(it != wh.end())
-    {
-        printf("it -> first %d \n", it -> first);
-        ++it;
-    }
-    it = wh.begin();*/
-    auto it2 = next(wh.begin());
-    while(it2 != wh.end())
-    {
-        ull w1 = it -> first, w2 = it2 -> first, h1 = it -> second, h2 = it2 -> second;
-        area += (w2 - w1) * (min(h2, h1));
-
-        if(h2 == h1)
-        {
-            len += h2 * 2 + (w2 - w1);
-        }
-        else
-        {
-            len += 2;
-        }
-        printf("w2 %llu w1 %llu h2 %llu h1 %llu area %llu\n", w2, w1, h2, h1, area);
-        it = next(it);
-        it2 = next(it2);
-    }
-
-    cout << len << ' ' << area;
+    return a.x < b.x;
 }
 
 int main()
@@ -75,23 +19,63 @@ int main()
     cin.tie(0);
 
     int n;
-    ull x, h, w, l_most = ULLONG_MAX, r_most = 0;
+    ll x, h, w; 
     cin >> n;
+    vector<one_h> house;
+
     while(n--)
     {
         cin >> x >> h >> w;
-        one_h tmp;
+        one_h tmp, tmp2;
+
         tmp.x = x;
         tmp.h = h;
-        tmp.w = w;
-        v.push_back(tmp);
+        tmp.in_type = 1;
 
-        l_most = min(x, l_most);
-        r_most = max(x + w, r_most);
+        tmp2.x = x + w;
+        tmp2.h = h;
+        tmp2.in_type = 0;
+        
+        house.push_back(tmp);
+        house.push_back(tmp2);
+
     }
+    
+    sort(house.begin(), house.end(), cmp);
+    ll h2 = 0, area = 0, len = 0;
+    x = h = 0;
+    multiset<ll> x_height;
+    for(auto i : house)
+    {
+        if(i.x != x)
+        {
+            area += h2 * (i.x - x);
+            len += abs(h2 - h) + (h2 > 0) * (i.x - x);
+            // printf("ix %lld x %lld h2 %lld h %lld area %lld len %lld\n", i.x, x, h2, h, area , len);
+            x = i.x;
+            h = h2;
+        }
 
-    map<ull, ull> wh;
-    sort(v.begin(), v.end(), cmp);
-    get_ans(l_most, r_most, wh);
+        if(i.in_type == 1)
+        {
+            // printf("insert %lld at %lld\n", i.h, i.x);
+            x_height.insert(i.h);
+        }
+        else
+        {
+            // printf("erase %lld at %lld\n", i.h, i.x);
+            x_height.erase(x_height.find(i.h));
+        }
+        
+        if(x_height.size())
+        {
+            h2 = *(x_height.rbegin());
+        }
+        else
+        {
+            h2 = 0;
+        }
+    }
+    cout << len + abs(h2 - h) << ' ' << area;
     return 0;
 }
