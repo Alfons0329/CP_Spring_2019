@@ -69,6 +69,7 @@ int main()
         m = max(m, tmp);
     }
 
+    printf("OK\n");
     m = max(n, m);
     n = max(n, m);
     m += n;
@@ -83,12 +84,16 @@ int main()
     } 
 
     fft(a, n, 1);
+    printf("OK\n");
     fft(b, n, 1);
+    printf("OK\n");
     for (int i = 0; i < n; i++)
     {
         a[i] *= b[i];
     }
+    printf("OK\n");
     fft (a, n, -1);
+    printf("OK\n");
     
     while(Q--)
     {
