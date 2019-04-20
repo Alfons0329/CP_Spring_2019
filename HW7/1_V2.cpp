@@ -1,8 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 double PI = acos(-1);
-const int MAXN = 4*1e5+10;
-int r[MAXN];
+const int MAX_N = 1e5 + 10;
+int r[MAX_N];
 struct Complex{
     double r, i;
     Complex(){}
@@ -11,7 +11,7 @@ struct Complex{
     Complex operator -(const Complex &y) { return Complex(r-y.r, i-y.i); }
     Complex operator *(const Complex &y) { return Complex(r*y.r - i*y.i, r*y.i+i*y.r); }
     Complex operator *=(const Complex &y) { double t = r; r = r*y.r - i*y.i, i = t*y.i + i*y.r; }
-}a[MAXN], b[MAXN];
+}a[MAX_N], b[MAX_N];
 void fft(Complex *a, int len, int op)
 {
     Complex tt;
@@ -55,6 +55,7 @@ int main()
     int N, n, M, m, Q, tmp;
     cin >> N >> M >> Q;
     a[0].r = b[0].r = 1;
+    m = n = 0;
     while(N--)
     {
         cin >> tmp;
@@ -68,19 +69,17 @@ int main()
         m = max(m, tmp);
     }
 
+    m = max(n, m);
+    n = max(n, m);
     m += n;
     int L, i, x;
-    for(int i = 0; i <= 4; i++)
-    {
-        cout << a[i].r << '|' << b[i].r << '\n';
-    }
     for(n = 1, L = 0; n <= m; n <<= 1)
     {
         L++;
     }
     for (i = 0, x = L - 1; i < n; i++)
     {
-        r[i] = (r[i>>1]>>1) | ((i&1)<<x);
+        r[i] = (r[i >> 1] >>1) | ((i & 1) << x);
     } 
 
     fft(a, n, 1);
@@ -91,11 +90,17 @@ int main()
     }
     fft (a, n, -1);
     
-    printf("res -----\n");
     while(Q--)
     {
         cin >> tmp;
-        cout << int(a[tmp].r + 0.5) << '\n';
+        if(tmp > MAX_N)
+        {
+            cout << 0 << '\n';
+        }
+        else
+        {
+            cout << int(a[tmp].r + 0.5) << '\n';
+        }
     }
     return 0;
 }
