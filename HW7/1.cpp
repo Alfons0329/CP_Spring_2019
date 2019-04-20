@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 #define ull unsigned long long
-#define MAX_N 131072
+#define MAX_N 65536
 #define MAX_HP 100005
 using namespace std;
 
@@ -55,7 +55,7 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
 
-    int n, m, tmp, cnt = 0;
+    int n, m, tmp, cnt = 0, max_sw = 0, max_sh = 0;
     ull q;
     cin >> n >> m >> q;
     vector<cd> sw(MAX_N, 0);
@@ -63,39 +63,36 @@ int main()
     vector<cd> sh(MAX_N, 0);
     vector<cd> sh_cp(MAX_N, 0);
     vector<cd> res(MAX_N, 0);
-    vector<cd> res_cp(MAX_N, 0);
 
     sw[0] = sh[0] = 1;
     while(n--)
     {
         cin >> tmp;
+        cout << "tmp " << tmp << '\n';
+        max_sw = max(max_sw, tmp);
         sw[tmp] += 1;
     }
     while(m--)
     {
         cin >> tmp;
+        cout << "tmp " << tmp << '\n';
+        max_sh = max(max_sh, tmp);
         sh[tmp] += 1;
     }
 
-
-    while(q--)
+    fft(sw, sw_cp, log2(max_sw));
+    fft(sh, sh_cp, log2(max_sh));
+    for(int i = 0; i < max_sh + max_sw; i++)
     {
-        cin >> tmp;
-        if(tmp > MAX_HP)
-        {
-            cout << 0 << '\n';
-        }
-        else
-        {
-            fft(sw, sw_cp, log2(tmp + 1));
-            fft(sh, sh_cp, log2(tmp + 1));
-            for(int i = 0; i <= tmp; i++)
-            {
-                res_cp[i] = sw_cp[i] * sh_cp[i];
-            }
-            fft(res_cp, res, log2(tmp + 1));
-            cout << (int)(res[tmp].real())<< '\n';
-        }
+        sw_cp[i] *= sh_cp[i];
     }
+    fft(sw_cp, res, log2(max_sh + max_sw));
+
+    cout << "------\n";
+    for(int i = 0; i < 5; i++)
+    {
+        cout << res[i] << '\n';
+    }
+
     return 0;
 }
