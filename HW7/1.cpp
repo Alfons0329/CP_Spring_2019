@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 #define ull unsigned long long
-#define MAX_N 16
+#define MAX_N 131072
+#define MAX_HP 100005
 using namespace std;
 
 typedef complex<double> cd;
@@ -61,8 +62,8 @@ int main()
     vector<cd> sw_cp(MAX_N, 0);
     vector<cd> sh(MAX_N, 0);
     vector<cd> sh_cp(MAX_N, 0);
-    vector<cd> res(MAX_N * 2, 0);
-    vector<cd> res_cp(MAX_N * 2, 0);
+    vector<cd> res(MAX_N, 0);
+    vector<cd> res_cp(MAX_N, 0);
 
     sw[0] = sh[0] = 1;
     while(n--)
@@ -76,17 +77,25 @@ int main()
         sh[tmp] += 1;
     }
 
-    for(int i = 0; i < MAX_N; i++)
-    {
-        cout << sw[i] << '|' << sh[i] << '\n';
-    }
-    cout << "--------------\n";
-    fft(sw, sw_cp, log2(MAX_N));
-    fft(sh, sh_cp, log2(MAX_N));
 
-    for(int i = 0; i < MAX_N; i++)
+    while(q--)
     {
-        cout << sw_cp[i] << '|' << sh_cp[i] << '\n';
+        cin >> tmp;
+        if(tmp > MAX_HP)
+        {
+            cout << 0 << '\n';
+        }
+        else
+        {
+            fft(sw, sw_cp, log2(tmp + 1));
+            fft(sh, sh_cp, log2(tmp + 1));
+            for(int i = 0; i <= tmp; i++)
+            {
+                res_cp[i] = sw_cp[i] * sh_cp[i];
+            }
+            fft(res_cp, res, log2(tmp + 1));
+            cout << (int)(res[tmp].real())<< '\n';
+        }
     }
     return 0;
 }
