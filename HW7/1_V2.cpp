@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 double PI = acos(-1);
-const int MAX_N = 1e5 + 10;
+const int MAX_N = 4e5 + 10;
 int r[MAX_N];
 struct Complex{
     double r, i;
@@ -11,7 +11,7 @@ struct Complex{
     Complex operator -(const Complex &y) { return Complex(r-y.r, i-y.i); }
     Complex operator *(const Complex &y) { return Complex(r*y.r - i*y.i, r*y.i+i*y.r); }
     Complex operator *=(const Complex &y) { double t = r; r = r*y.r - i*y.i, i = t*y.i + i*y.r; }
-}a[MAX_N], b[MAX_N];
+}a[MAX_N], b[MAX_N], c[MAX_N];
 void fft(Complex *a, int len, int op)
 {
     Complex tt;
@@ -24,16 +24,16 @@ void fft(Complex *a, int len, int op)
     }
     for (int i = 1; i < len; i <<= 1)
     {
-        Complex wn(cos(PI/i), sin(PI*op/i));
-        for (int k=0, t=(i<<1); k < len; k += t)
+        Complex wn(cos(PI / i), sin(PI * op / i));
+        for (int k = 0, t = (i << 1); k < len; k += t)
         {
             Complex w(1, 0);
             for (int j = 0; j < i; j++, w *= wn)
             {
-                Complex t = w*a[k+j+i];
-                Complex u = a[k+j];
-                a[k+j] = u + t;
-                a[k+j+i] = u - t;
+                Complex t = w * a[k + j + i];
+                Complex u = a[k + j];
+                a[k + j] = u + t;
+                a[k + j + i] = u - t;
             }
         }
     }
@@ -69,10 +69,8 @@ int main()
         m = max(m, tmp);
     }
 
-    printf("OK\n");
-    m = max(n, m);
-    n = max(n, m);
     m += n;
+    // printf("n %d m %d\n", n, m);
     int L, i, x;
     for(n = 1, L = 0; n <= m; n <<= 1)
     {
@@ -83,28 +81,30 @@ int main()
         r[i] = (r[i >> 1] >>1) | ((i & 1) << x);
     } 
 
+    // printf("n %d m %d\n", n, m);
     fft(a, n, 1);
-    printf("OK\n");
+    // printf("OK\n");
     fft(b, n, 1);
-    printf("OK\n");
+    // printf("OK2\n");
     for (int i = 0; i < n; i++)
     {
-        a[i] *= b[i];
+        c[i] = a[i] * b[i];
+        // printf("i %d ci %d ai %d bi %d\n", i, c[i], a[i], a[i]);
     }
-    printf("OK\n");
-    fft (a, n, -1);
-    printf("OK\n");
+    // printf("OK3\n");
+    fft (c, max(n, m), -1);
+    // printf("OK4\n");
     
     while(Q--)
     {
         cin >> tmp;
-        if(tmp > MAX_N)
+        if(tmp > 1e5 + 5)
         {
             cout << 0 << '\n';
         }
         else
         {
-            cout << int(a[tmp].r + 0.5) << '\n';
+            cout << int(c[tmp].r + 0.5) << '\n';
         }
     }
     return 0;
