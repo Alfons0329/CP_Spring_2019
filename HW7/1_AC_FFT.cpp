@@ -63,6 +63,7 @@ int main()
     cin >> N >> M >> Q;
     a[0].r = b[0].r = 1;
     m = n = 0;
+
     while(N--)
     {
         cin >> tmp;
