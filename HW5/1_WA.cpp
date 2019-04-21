@@ -23,7 +23,6 @@ int main()
         c = min(c, m);
         ull res = r * c, delta = 0; 
         bool can_eat = 1;
-        // printf("r %llu c %llu\n", r, c);
 
         map<ull, ull>::iterator it = col_row.begin();
 
