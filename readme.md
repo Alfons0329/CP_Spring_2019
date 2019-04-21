@@ -909,8 +909,17 @@ int main()
 ```
 
 ### [City Skyline](https://oj.nctu.me/problems/848/)
-* Thought: Use multimap
+* Thought: 
+    * Use **multiset** to maintain the height of current position while remain the order of highest on the top due to the property of multiset.
+    * Step 1. Classify the wall of house into 2 type, in (left) and out(right), once the house is encountered, push_back to the multiset, while leave erase it.
+    * Step 2. $h_{2}$ is the height of current position and $h$ being the last height, while the same is true for $i.x$ and $x$.
+        * Step 2-1. Add the total area by $h_{2} * \Delta x, \Delta x = (i.x - x)$
+        * Step 2-2. Add the total outline length by $|x-y| + \Delta x$ if current height is not zero (the ㄏ part) and add by $|x-y|$ (the | part at the end of each house cluster)
+    * After all the house hav been iterated, add the rightmost wall to the total outline length.
 * Visualization: Please toggle the comment part (printf) to understanding the height change and current area and outline length.
+![](https://i.imgur.com/kR22YoQ.jpg)
+![](https://i.imgur.com/x5iriNG.jpg)
+
 * Analysis:
     * Time complexity: $O(N)$ where N is # of building since we iterate all the buildings left wall and right wall to "climb the outline" of this overlapped structure
     * Space complexity: $O(N)$
