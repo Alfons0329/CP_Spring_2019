@@ -11,13 +11,13 @@ struct Complex
     double r, i;
     Complex(){}
     Complex(double _r, double _i){ r = _r, i = _i; }
-    Complex operator +(const Complex &y) { return Complex(r+y.r, i+y.i); }
-    Complex operator -(const Complex &y) { return Complex(r-y.r, i-y.i); }
-    Complex operator *(const Complex &y) { return Complex(r*y.r - i*y.i, r*y.i+i*y.r); }
-    Complex operator *=(const Complex &y) { double t = r; r = r*y.r - i*y.i, i = t*y.i + i*y.r; }
+    Complex operator +(const Complex &y) { return Complex(r + y.r, i + y.i); }
+    Complex operator -(const Complex &y) { return Complex(r - y.r, i - y.i); }
+    Complex operator *(const Complex &y) { return Complex(r * y.r - i * y.i, r * y.i + i * y.r); }
+    Complex operator *=(const Complex &y) { double t = r; r = r * y.r - i * y.i, i = t * y.i + i * y.r; }
 } a[MAX_N], b[MAX_N], c[MAX_N];
 
-void fft(Complex *a, int len, int op)
+void fft(Complex *a, int len/* Deg of polynomial */, int op /* Inverse or normal FFT */) 
 {
     Complex tt;
     for (ull i = 0; i < len; i++)
@@ -27,6 +27,7 @@ void fft(Complex *a, int len, int op)
             tt = a[i], a[i] = a[r[i]], a[r[i]] = tt;
         }
     }
+
     for (ull i = 1; i < len; i <<= 1)
     {
         Complex wn(cos(PI / i), sin(PI * op / i));
@@ -42,6 +43,7 @@ void fft(Complex *a, int len, int op)
             }
         }
     }
+
     if (op == -1)
     {
         for (ull i = 0; i < len; i++)
@@ -75,7 +77,6 @@ int main()
     }
 
     m += n;
-    // printf("n %d m %d\n", n, m);
     ull L, i, x;
     for(n = 1, L = 0; n <= m; n <<= 1)
     {
@@ -92,7 +93,7 @@ int main()
     {
         c[i] = a[i] * b[i];
     }
-    fft (c, n, -1);
+    fft (c, n, -1); // inverse fft
     
     while(Q--)
     {
