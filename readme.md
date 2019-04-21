@@ -1,4 +1,4 @@
-# Competitive Programming
+# $Competitive Programming$
 * Spring 2019
 * Lecturer: Min-Zheng Hsieh
 * Time: 5IJK @ ED117
@@ -619,7 +619,7 @@ int main()
     * Step 1. Define a map to store the col -> row correspondence **if successfully eat a chocolate** 
     * Step 2. If such row, col (prepare-to-eat) <= one of the bite's position eaten before, then this location must been eaten before, hence Hank cannot eat this time, print QAQ
     * Step 3. Sum each vertical xxx up (eaten before) from left to right
-to form the delta value (sum all the vertical bar of x till the position of ready-to-eat's column) this bears a resemblance to that of **Reimann Integral**
+to form the delta value (sum all the vertical bar of x till the position of ready-to-eat's column) this process bears a resemblance to that of **Reimann Integral**
     * For more detail, see the following demo and comment part of code since it is bit hard to explain thoroughly of the algorithm with plain words
 ```
 xoooov ---> position want to eat
@@ -806,4 +806,194 @@ int main()
 
     return 0;
 }
-`
+```
+
+## 20190412, HW6
+### [CPU Scheduling](https://oj.nctu.me/problems/847/)
+
+* Thought : (See the comment part in code for more information) 
+    * Step 1. From the description of problem, tasks with the same group should be **inserted at the front** of its group, and remove at first, hence the "stack" STL satisfies this problem.
+    * Step 2. Aside from the insertion, we should also maintain the order of all groups, since tasks with the same group are clustered togerher like segments (Visualization)--> |G1|G3|G5|G2| and so on.
+    * Step 3. Here we have 2 situations for insertion.
+        * Step 3-1. First, if this task is the newly inserted one, namely such group has not been inserted before` (cpu[v[op2]].size() == 0)` --> in-group order stack has no size, then this task will be the fist of its group to be inserted in.
+        * Step 3-2. Otherwise, just push to its group correspondingly.
+    * Stp 4. Here we have 2 situations for deletion.
+        * Step 4-1. To pop a work from CPU, we should check which group is in the "frontmost" and get its gid.
+        * Step 4-2. After the gid is secured, we may query the top element of the stack of such gid, due to the property of stack, LIFO will satisfying the requirement of this problem.
+        * Step 4-3. If all of the tasks of such group have been popped out, pop "front" of the g_order deque (deque makes pop_front possible) and **erase such group from map to prevent MLE or RE**.
+        * Step 4-4. If there is no more task in the CPU, just print 0 and let CPU take rest.
+
+* Memory Limit Exceeded Notice: To maintain the order in group (order of tasks of the same gid) vector should replace stack since it does support pop_back and stack usually implemented with deque by default. Please feel free to check [this link](https://stackoverflow.com/questions/16252183/why-is-deque-using-so-much-more-ram-than-vector-in-c) for understanding.    
+* Analysis:
+    * Time complexity: $O(NlogN)$, where N is the # of total tasks since each tasks will be inserted and remove from the cpu queue certain times, but operations of insertion/erase to the map will cost up to $logN$ (map). Other operations such as pop_front/push_back the g_order from the front, and pop_back/push_back the in-group vector all costs $O(1)$ 
+    * Space complexity: $O(N)$, where N is the # of total tasks.
+
+```cpp
+#include <bits/stdc++.h>
+#define vi vector<int>
+#define vb vector<bool>
+#define pb push_back
+#define MIN -100005
+using namespace std;
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+
+    int n, q, tmp, g_size, cpu_size = 0;
+    cin >> n >> q;
+    g_size = n;
+
+    vi v;
+    v.pb(MIN);
+    deque<int> g_order; // Step 2
+    vb in_cpu(n + 1, 0);
+    map<int, vector<int>> cpu; // gid -> process stk **MLE IF USE stack<int instead>** Step 1
+
+    while(n--)
+    {
+        cin >> tmp;
+        v.pb(tmp);
+    }
+
+    int op1, op2;
+    while(q--)
+    {
+        cin >> op1; 
+        if(op1 == 1)
+        {
+            cin >> op2;
+            if(in_cpu[op2])
+            {
+                cout << "Ignore" << '\n';
+            }
+            else
+            {
+                if(cpu[v[op2]].size() == 0) // Step 3-1 havent such gruop in it
+                {
+                    g_order.pb(v[op2]);
+                }
+                cpu[v[op2]].push_back(op2); // Step 3-2 
+                in_cpu[op2] = 1;
+                cout << "Successful" << '\n';
+            }
+        }
+        else
+        {
+            if(g_order.size()) // Step 4
+            {
+                int g_id = g_order.front();
+				op2 = cpu[g_id].back(); // Step 4-1
+				cout << op2 << '\n';
+                in_cpu[op2] = 0;
+                cpu[g_id].pop_back(); // Step 4-2
+
+                if(cpu[g_id].size() == 0)
+                {
+                    if(g_order.size())
+                    {
+                        g_order.pop_front();
+                    }
+					cpu.erase(g_id); // Step 4-3
+                }
+            }
+            else
+            {
+                cout << 0 << endl; // Step 4-4
+            }
+        }
+    }
+
+    return 0;
+}
+```
+
+### [City Skyline](https://oj.nctu.me/problems/848/)
+* Thought: Use multimap
+* Visualization: Please toggle the comment part (printf) to understanding the height change and current area and outline length.
+* Analysis:
+    * Time complexity: $O(N)$ where N is # of building since we iterate all the buildings left wall and right wall to "climb the outline" of this overlapped structure
+    * Space complexity: $O(N)$
+```cpp
+#include <bits/stdc++.h>
+#define ll long long
+using namespace std;
+
+struct one_h
+{
+    ll x, h;
+    bool in_type;
+};
+
+bool cmp(one_h a, one_h b)
+{
+    return a.x < b.x;
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+
+    int n;
+    ll x, h, w; 
+    cin >> n;
+    vector<one_h> house;
+
+    while(n--)
+    {
+        cin >> x >> h >> w;
+        one_h tmp, tmp2;
+
+        tmp.x = x;
+        tmp.h = h;
+        tmp.in_type = 1;
+
+        tmp2.x = x + w;
+        tmp2.h = h;
+        tmp2.in_type = 0;
+        
+        house.push_back(tmp);
+        house.push_back(tmp2);
+
+    }
+    
+    sort(house.begin(), house.end(), cmp);
+    ll h2 = 0, area = 0, len = 0;
+    x = h = 0;
+    multiset<ll> x_height;
+    for(auto i : house)
+    {
+        if(i.x != x)
+        {
+            area += h2 * (i.x - x);
+            len += abs(h2 - h) + (h2 > 0) * (i.x - x);
+            // printf("ix %lld x %lld h2 %lld h %lld area %lld len %lld\n", i.x, x, h2, h, area , len);
+            x = i.x;
+            h = h2;
+        }
+
+        if(i.in_type == 1)
+        {
+            // printf("insert %lld at %lld\n", i.h, i.x);
+            x_height.insert(i.h);
+        }
+        else
+        {
+            // printf("erase %lld at %lld\n", i.h, i.x);
+            x_height.erase(x_height.find(i.h));
+        }
+        
+        if(x_height.size())
+        {
+            h2 = *(x_height.rbegin());
+        }
+        else
+        {
+            h2 = 0;
+        }
+    }
+    cout << len + abs(h2 - h) << ' ' << area;
+    return 0;
+}
+```
