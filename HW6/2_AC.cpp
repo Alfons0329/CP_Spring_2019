@@ -51,19 +51,19 @@ int main()
         {
             area += h2 * (i.x - x);
             len += abs(h2 - h) + (h2 > 0) * (i.x - x);
-            // printf("ix %lld x %lld h2 %lld h %lld area %lld len %lld\n", i.x, x, h2, h, area , len);
+            printf("ix %lld x %lld h2 %lld h %lld area %lld len %lld\n", i.x, x, h2, h, area , len);
             x = i.x;
             h = h2;
         }
 
         if(i.in_type == 1)
         {
-            // printf("insert %lld at %lld\n", i.h, i.x);
+            printf("insert %lld at %lld\n", i.h, i.x);
             x_height.insert(i.h);
         }
         else
         {
-            // printf("erase %lld at %lld\n", i.h, i.x);
+            printf("erase %lld at %lld\n", i.h, i.x);
             x_height.erase(x_height.find(i.h));
         }
         

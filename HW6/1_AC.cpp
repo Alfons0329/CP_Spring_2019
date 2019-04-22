@@ -71,7 +71,6 @@ int main()
                 cout << 0 << endl;
             }
         }
-        // printf("\n");
     }
 
     return 0;
