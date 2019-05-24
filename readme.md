@@ -48,8 +48,8 @@ while True: # keep reading till eof
 ### [Mex](https://oj.nctu.me/problems/822/) 
 * Thought 1(MLE): Store each of the input number in the hash map, and traverse from 0 to len_map - 1, seeing which number is the first that haven't been put to the slot before
 * Analysis: 
-    * Time complexity: $O(N) 
-    * Space complexity $O(r-l)$ but the `bool* m = new bool[r - l + 1]();` part due to r, l may be up to $10^{18}$, and the input length is at most $10^7$, it is quite sparse and waste lots of memory space thus causing MLE.  
+    * Time complexity: $O(N)$ 
+    * Space complexity $O(r-l)$ but the `bool* m = new bool[r - l + 1]();` part due to $r, l$ may be up to $10^{18}$, and the input length is at most $10^7$, it is quite sparse and waste lots of memory space thus causing MLE.  
 
 ```cpp
 #include <bits/stdc++.h>
@@ -237,11 +237,11 @@ With Greedy
 7 10
 ```
 
-* Thought: Traverse [n - 1, 0] where n is len of the given sequence, maintain a stack that is increasing from top(newest) to bottom(oldest). Once the higher elements encounterd, pop the stack until the top of stack is higher, and update the size of current stack as the final answer(see code).
+* Thought: Traverse $[n - 1, 0]$ where n is len of the given sequence, maintain a stack that is increasing from top(newest) to bottom(oldest). Once the higher elements encounterd, pop the stack until the top of stack is higher, and update the size of current stack as the final answer(see code).
     * Why it works? 
-        * From [n - 1, 0] maintains the increasing stack makes result correct.
+        * From $[n - 1, 0]$ maintains the increasing stack makes result correct.
         * Use the number as large as possible to implementation the greedy algorithm (See the following example)
-* Question: Why cant we traverse [0, n - 1] (See the following example)
+* Question: Why cant we traverse $[0, n - 1]$ (See the following example)
 
 * Analysis:
     * Time complexity $O(N), N = len(seq)$, each insert takes $O(1)$ and pop takes $O(1)$ since each one element enters the stack and leaves the stack at most once
@@ -313,7 +313,7 @@ int main()
 ## 20190322, HW3
 ### [Binary String](https://oj.nctu.me/problems/825/)
 
-* Thought: By using the dedicated data structure "trie" to accomplish string prefix matching in O(N) time, for more idea, see the comments.
+* Thought: By using the dedicated data structure "trie" to accomplish string prefix matching in $O(N)$ time, for more idea, see the comments.
 * Analysis:
     * Time complexity: $O(N)$
     * Space complexity: $O(N)$
@@ -403,7 +403,7 @@ int main()
 ### [Chocolate! Chocolate!!](https://oj.nctu.me/problems/825/)
 * Thought: DFS the map, and mark the eaten grid so the infinite recusrion will not happen.
 * Analysis:
-    * Time complexity: $O(m * n)$ eventully up to m * n grid of chocolate will be eaten
+    * Time complexity: $O(m * n)$ eventully up to $m * n$ grid of chocolate will be eaten
     * Space complexity: $O(m * n)$ by using the map to trace grids that have been eaten
 ```cpp
 #include <bits/stdc++.h>
@@ -1270,4 +1270,4 @@ int main()
     
     return 0;
 }
-`
+```
