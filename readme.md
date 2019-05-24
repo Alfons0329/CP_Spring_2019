@@ -1006,3 +1006,268 @@ int main()
     return 0;
 }
 ```
+
+## 20190419 HW7 + 8 (Till 15th HW that teacher required)
+### [Dragon Raider](https://oj.nctu.me/problems/853/)
+* Thought: Use the index as power of shiled and sword, and the value being objects in such power. Represent them in 2 arrays, hence the total combination of certain power $p$ will be the value in the corresponding position $arr[p]$
+* Analysis:
+    * Time complexity: $O(N^2)$
+    * Space complexity: $O(N)$
+```cpp
+#include <bits/stdc++.h>
+#define ull unsigned long long
+#define MAX_N 100005
+using namespace std;
+
+ull a[MAX_N], b[MAX_N], c[MAX_N];
+
+int main()
+{
+    cin.tie(0);
+    ios_base::sync_with_stdio(0);
+
+    ull N, n, M, m, Q, tmp;
+    cin >> N >> M >> Q;
+    a[0] = b[0] = 1;
+    m = n = 0;
+
+    while(N--)
+    {
+        cin >> tmp;
+        a[tmp]++;
+        n = max(n, tmp);
+    }
+    while(M--)
+    {
+        cin >> tmp;
+        b[tmp]++;
+        m = max(m, tmp);
+    }
+
+    for(int i = 0; i <= n; i++)
+    {
+        for(int j = 0; j <= m; j++)
+        {
+            c[i + j] += a[i] * b[j];
+        }
+    }
+
+    while(Q--)
+    {
+        cin >> tmp;
+        if(tmp == 0 ||tmp > 1e5 + 5)
+        {
+            cout << 0 << '\n';
+        }
+        else
+        {
+            cout << (ull)(c[tmp]) << '\n';
+        }
+    }
+    return 0;
+}
+```
+* おまけ: FFT
+* [FFT reference](https://medium.com/@aiswaryamathur/understanding-fast-fourier-transform-from-scratch-to-solve-polynomial-multiplication-8018d511162f)
+* Analysis:
+    * Time complexity: $O(NlogN)$
+    * Space complexity: $O(N)$
+```cpp
+#include <bits/stdc++.h>
+#define ull unsigned long long
+
+using namespace std;
+
+double PI = acos(-1);
+const int MAX_N = 4e5 + 10;
+int r[MAX_N];
+struct Complex
+{
+    double r, i;
+    Complex(){}
+    Complex(double _r, double _i){ r = _r, i = _i; }
+    Complex operator +(const Complex &y) { return Complex(r + y.r, i + y.i); }
+    Complex operator -(const Complex &y) { return Complex(r - y.r, i - y.i); }
+    Complex operator *(const Complex &y) { return Complex(r * y.r - i * y.i, r * y.i + i * y.r); }
+    Complex operator *=(const Complex &y) { double t = r; r = r * y.r - i * y.i, i = t * y.i + i * y.r; }
+} a[MAX_N], b[MAX_N], c[MAX_N];
+
+void fft(Complex *a, int len/* Deg of polynomial */, int op /* Inverse or normal FFT */) 
+{
+    Complex tt;
+    for (ull i = 0; i < len; i++)
+    {
+        if (i < r[i])
+        {
+            tt = a[i], a[i] = a[r[i]], a[r[i]] = tt;
+        }
+    }
+
+    for (ull i = 1; i < len; i <<= 1)
+    {
+        Complex wn(cos(PI / i), sin(PI * op / i));
+        for (ull k = 0, t = (i << 1); k < len; k += t)
+        {
+            Complex w(1, 0);
+            for (ull j = 0; j < i; j++, w *= wn)
+            {
+                Complex t = w * a[k + j + i];
+                Complex u = a[k + j];
+                a[k + j] = u + t;
+                a[k + j + i] = u - t;
+            }
+        }
+    }
+
+    if (op == -1)
+    {
+        for (ull i = 0; i < len; i++)
+        {
+            a[i].r /= len;
+            a[i].i /= len;
+        }
+    }
+}
+
+int main()
+{
+    cin.tie(0);
+    ios_base::sync_with_stdio(0);
+
+    ull N, n, M, m, Q, tmp;
+    cin >> N >> M >> Q;
+    a[0].r = b[0].r = 1;
+    m = n = 0;
+
+    while(N--)
+    {
+        cin >> tmp;
+        a[tmp].r++;
+        n = max(n, tmp);
+    }
+    while(M--)
+    {
+        cin >> tmp;
+        b[tmp].r++;
+        m = max(m, tmp);
+    }
+
+    m += n;
+    ull L, i, x;
+    for(n = 1, L = 0; n <= m; n <<= 1)
+    {
+        L++;
+    }
+    for (i = 0, x = L - 1; i < n; i++)
+    {
+        r[i] = (r[i >> 1] >>1) | ((i & 1) << x);
+    } 
+
+    fft(a, n, 1);
+    fft(b, n, 1);
+    for (ull i = 0; i < n; i++)
+    {
+        c[i] = a[i] * b[i];
+    }
+    fft (c, n, -1); // inverse fft
+    
+    while(Q--)
+    {
+        cin >> tmp;
+        if(tmp == 0 ||tmp > 1e5 + 5)
+        {
+            cout << 0 << '\n';
+        }
+        else
+        {
+            cout << (ull)(c[tmp].r + 0.5) << '\n';
+        }
+    }
+    return 0;
+}
+```
+### [Mod inverse (Prime version)](https://oj.nctu.me/problems/854/)
+* Thought: $Fermat's little\ Theorem$
+* Analysis:
+    * Time complexity: $O(a^p)??$ **Not sure** with a being the base and p being power.
+    * Space complexity: $O(1)$
+```cpp
+#include <bits/stdc++.h>
+#define ull unsigned long long
+using namespace std;
+
+ull pow_mod(ull x, ull y, ull p)
+{
+    ull res = 1;
+    x %= p;
+
+    while(y > 0)
+    {
+        if(y & 1) // last
+        {
+            res = (res * x) % p;
+        }
+        y >>= 1;
+        x = (x * x) % p;
+    }
+    return res;
+}
+int main()
+{
+    cin.tie(0);
+    ios_base::sync_with_stdio(false);
+    int n, a, p;
+    cin >> n;
+    while(n--)
+    {
+        cin >> a >> p;
+        cout << pow_mod(a, p - 2, p) << '\n';
+    }
+    return 0;
+}
+```
+### [XOR](https://oj.nctu.me/problems/857/)
+* Thought: Just like interval sum, now we query the interval XOR or the array. 
+    * Step 1. Each time we XOR with the latest input value and store the corrresponding interval XOR value(from 1 to i, 1-base in this problem) in array $a[MAX\_N]$
+    * Step 2. For the query value, the interval XOR value between $l,\ r$ will be $a[l\ -\ 1]\ XOR\ a[r]$
+* Analysis:
+    * Time complexity: $O(N)$
+    * Space complexity: $O(N)$
+```cpp
+#include <bits/stdc++.h>
+#define MAX_N 100005
+using namespace std;
+
+int main()
+{
+    cin.tie(0);
+    ios_base::sync_with_stdio(false);
+    int n, q, tmp;
+    int a[MAX_N] = {0};
+    cin >> n >> q;
+    for(int i = 1; i <= n; i++)
+    {
+        cin >> tmp;
+        if(i != 1)
+        {
+            a[i] = a[i - 1] ^ tmp;
+        }
+        else
+        {
+            a[i] = tmp;
+        }
+    }
+    
+    int l, r;
+    while(q--)
+    {
+        cin >> l >> r;
+        l = a[l - 1];
+        r = a[r];
+        l ^= r;
+        cout << l << '\n';
+    }
+    
+    return 0;
+}
+`
