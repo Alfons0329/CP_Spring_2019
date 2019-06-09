@@ -1,28 +1,43 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int a[366];
+int a[367];
 int main()
 {
-    int n;
+    int n, tmp;
     cin >> n;
     for(int i = 0; i < n; i++)
     {
-        cin >> a[i];
+        cin >> tmp;
+        a[tmp] = 1;
     }
-    a[n] = a[n - 1]; // padding 
-    int res = 0;
-    for(int i = 0; i < n; i++)
+    int res = 0, encounter = 0, dirty = 0;
+    int i = 0;
+    while(i <= 366)
     {
-        int j = i;
-        res++;
-        while(j < n && a[j] - a[i] < 20)
+        if(dirty >= 20)
         {
-            j++;
+            encounter = 0;
+            dirty = 0;
+            res++;
+            i--;
+            continue;
         }
-        i = j - 1;
+
+        dirty += encounter;
+
+        if(a[i])
+        {
+            encounter++;
+        }
+
+        i++;
+        // printf("Day %d encounter %d dirty %d res %d\n", i, encounter, dirty, res);
     }
-    
+    if(dirty > 0)
+    {
+        res++;
+    }
     cout << res << '\n';
     return 0;
 }
