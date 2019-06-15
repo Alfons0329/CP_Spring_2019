@@ -37,7 +37,6 @@ int main()
         {
             int m = mecha.back();
             int g = god.back();
-            // printf("mecha size %d god size %d m %d g %d \n", mecha.size(), god.size(), m, g);
             
             if(m > g)
             {

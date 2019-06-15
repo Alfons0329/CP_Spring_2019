@@ -20,7 +20,7 @@ int main()
             encounter = 0;
             dirty = 0;
             res++;
-            i--;
+            i--; // dont forget to drop back 1
             continue;
         }
 
@@ -28,15 +28,14 @@ int main()
 
         if(a[i])
         {
-            encounter++;
+            encounter++; // increment the encounter if meet new dirty push
         }
 
         i++;
-        // printf("Day %d encounter %d dirty %d res %d\n", i, encounter, dirty, res);
     }
     if(dirty > 0)
     {
-        res++;
+        res++; // push in the new year's eve
     }
     cout << res << '\n';
     return 0;

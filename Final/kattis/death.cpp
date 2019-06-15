@@ -15,30 +15,27 @@ int main()
         if(op == "buy")
         {
             cin >> on1 >> on2;
+            // Not total += on1 * on2, since the shares and avg may change in other operation except than this one
             total = shares * avg + (double)(on1 * on2);
             shares += on1;
             avg = total / (double) shares; 
-            //printf("shares in buy %d total %f avg %f\n", shares, total, avg);
         }
         else if(op == "sell")
         {
             cin >> on1 >> on2;
             shares -= on1;
-            //printf("shares in sell %d total %f avg %f\n", shares, total, avg);
         }
         else if(op == "split")
         {
             cin >> on1;
             shares *= on1;
             avg /= on1;
-            //printf("shares in split %d total %f avg %f\n", shares, total, avg);
         }
         else if(op == "merge")
         {
             cin >> on1;
             shares /= on1; 
             avg *= on1;
-            //printf("shares in merge %d total %f avg %f\n", shares, total, avg);
         }
         else if(op == "die")
         {
