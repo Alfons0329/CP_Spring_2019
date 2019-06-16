@@ -30,6 +30,7 @@ int main()
                 res1.push_back(a[i]);
                 res1.push_back(a[j]);
                 res1.push_back(h1 - a[i] - a[j]);
+                // if 3 height are satisfied, the rest for the other tower since the answer is unique
                 m.erase(a[i]);
                 m.erase(a[j]);
                 m.erase(h1 - a[i] - a[j]);

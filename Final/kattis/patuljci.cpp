@@ -18,7 +18,7 @@ int main()
     {
         for(int j = i + 1; j < 9; j++)
         {
-            if(a[i] + a[j] == d)
+            if(a[i] + a[j] == d) // remove the unsatisfied 2 dwarf which sum up to total_sum - 100
             {
                 a[i] = -1;
                 a[j] = -1;
