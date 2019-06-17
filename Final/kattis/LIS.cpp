@@ -10,7 +10,6 @@ int main()
     while(cin >> n)
     {
         vector<int> v(n, 0);
-
     }
     return 0;
 }
