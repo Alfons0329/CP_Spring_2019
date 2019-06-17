@@ -1,3 +1,4 @@
+// for visualized solution, see card.jpg
 #include <bits/stdc++.h>
 using namespace std;
 int main()
