@@ -12,11 +12,11 @@ int main()
         vector<int> v(n, 0);
         vector<int> res;
         vector<int> final_res;
-        unordered_map<int, queue<int>> pos;
+        unordered_map<int, int> pos;
         for(int i = 0; i < n; i++)
         {
             cin >> v[i];
-            pos[v[i]].push(i);
+            pos[v[i]] = i;
         }
         
         res.push_back(v[0]);
@@ -29,7 +29,6 @@ int main()
                 max_len++;
                 res.push_back(v[i]);
                 final_res.push_back(i);
-                pos[v[i]].pop();
             }
             else
             {
@@ -38,13 +37,18 @@ int main()
                 {
                     res[lb] = v[i];
                     final_res[lb] = i;
-                    pos[v[i]].pop();
                 }
-                else if(lb > pos[res[lb - 1]].front() && lb < pos[res[lb + 1]].front()) // in the right order
+                else if(lb == 0 && pos[v[i]] < pos[res[lb + 1]])
                 {
                     res[lb] = v[i];
                     final_res[lb] = i;
-                    pos[v[i]].pop();
+                }
+                else if(pos[v[i]] > pos[res[lb - 1]] && pos[v[i]] < pos[res[lb + 1]]) // in the right order
+                {
+                    cout << "lb " << lb << " lb front " << pos[res[lb - 1]] << " back " 
+                        << pos[res[lb + 1]];
+                    res[lb] = v[i];
+                    final_res[lb] = i;
                 }
             }
         }
