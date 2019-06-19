@@ -9,64 +9,58 @@ int main()
     int n;
     while(cin >> n)
     {
+        if(n == 0)
+        {
+            cout << 0 << '\n';
+            continue;
+        }
         vector<int> v(n, 0);
-        vector<int> res;
-        vector<int> final_res;
-        unordered_map<int, int> pos;
+        vector<int> lis;
+        vector<int> lis_pos;
         for(int i = 0; i < n; i++)
         {
             cin >> v[i];
-            pos[v[i]] = i;
         }
-        
-        res.push_back(v[0]);
-        final_res.push_back(0);
-        int max_len = 1;
+
+        lis.push_back(v[0]);
+        lis_pos.push_back(0);
+        int max_len = 1, max_pos = 0;
         for(int i = 1; i < n; i++)
         {
-            if(v[i] > res.back())
+            if(v[i] > lis.back())
             {
+                lis.push_back(v[i]);
+                lis_pos.push_back(max_len);
+                max_pos = i;
                 max_len++;
-                res.push_back(v[i]);
-                final_res.push_back(i);
             }
             else
             {
-                int lb = lower_bound(res.begin(), res.end(), v[i]) - res.begin();
-                if(lb == max_len - 1) // last one, does not mattr
-                {
-                    res[lb] = v[i];
-                    final_res[lb] = i;
-                }
-                else if(lb == 0 && pos[v[i]] < pos[res[lb + 1]])
-                {
-                    res[lb] = v[i];
-                    final_res[lb] = i;
-                }
-                else if(pos[v[i]] > pos[res[lb - 1]] && pos[v[i]] < pos[res[lb + 1]]) // in the right order
-                {
-                    cout << "lb " << lb << " lb front " << pos[res[lb - 1]] << " back " 
-                        << pos[res[lb + 1]];
-                    res[lb] = v[i];
-                    final_res[lb] = i;
-                }
+                int lb = lower_bound(lis.begin(), lis.end(), v[i]) - lis.begin();
+                lis[lb] = v[i];
+                lis_pos.push_back(lb);
             }
         }
 
-        cout << max_len << '\n'; 
+        vector<int> final_res;
+        final_res.push_back(max_pos);
+        for(int i = max_pos; i >= 0; i--)
+        {
+            if(lis_pos[i] == lis_pos[max_pos] - 1)
+            {
+                max_pos = i;
+                final_res.push_back(max_pos);
+            }
+        }
+
+        reverse(final_res.begin(), final_res.end());
+        cout << max_len << '\n';
         for(int i = 0; i < max_len; i++)
         {
             cout << final_res[i] << ' ';
         }
         cout << '\n';
-        
-        /* 
-        for(int i = 0; i < max_len; i++)
-        {
-            cout << res[i] << ' ';
-        }
-        cout << '\n';
-        */
+
     }
     return 0;
 }
