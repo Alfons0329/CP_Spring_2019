@@ -8,19 +8,18 @@ void dfs(vector<vector <int> >& adj, vector<bool>& visited, int cur_node, int vi
     visited[cur_node] = true;
     vis_nodes++;
 
-    cout << "cur_node " << cur_node << " vis_nodes " << vis_nodes << '\n';
+    cout << "cur_node " << cur_node << " vis_nodes " << vis_nodes << " target " << target << '\n';
     int n_edges = adj[cur_node].size();
-    if(vis_nodes == target && cur_node == start_node);
+    if(vis_nodes == target && cur_node == start_node)
     {
         res++;
-        return;
     }
 
     for(int i = 0; i < n_edges; i++)
     {
         if(visited[adj[cur_node][i]] == false)
         {
-            cout << "start from " << adj[cur_node][i] << '\n';
+            cout << "Inner start from " << adj[cur_node][i] << '\n';
             dfs(adj, visited, adj[cur_node][i], vis_nodes, adj[cur_node][i], target);
         }
     }
@@ -83,23 +82,7 @@ int main()
         
         // do dfs
         vector<bool> visited(n, false);
-        for(int i = 1; i <= n; i++)
-        {
-            cout << "start from " << i << '\n';
-            dfs(adj, visited, i, 0, i, n);
-        }
-        /*
-        cout << "adjlist \n";
-        for(int i = 1; i <= n; i++)
-        {
-            cout << i << " --> ";
-            for(int j = 0; j < adj[i].size(); j++)
-            {
-                cout << adj[i][j] << ' ';
-            }
-            cout << '\n';
-        }
-        */
+        dfs(adj, visited, 1, 0, 1, n);
         cout << "Case #" << ++case_cnt << ": " << res % 9901 << '\n';
     }
 
