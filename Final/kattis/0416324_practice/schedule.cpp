@@ -21,12 +21,11 @@ int main()
     if(l % m)
     {
         res += q;
-        cout << "1res " << res << '\n';
+        // cout << "1res " << res << '\n';
     }
 
     s -= q *(m - l % m);
-    res += q;
-    cout <<"  s remain  " << s << '\n';
+    // cout << "s remain  " << s << '\n';
 
     if(s > 0)
     {
@@ -36,6 +35,10 @@ int main()
             {
                 res += 1;
             }
+        }
+        if(s % m)
+        {
+            res ++;
         }
     }
     cout << res;
