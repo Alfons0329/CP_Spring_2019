@@ -3,28 +3,25 @@ using namespace std;
 
 int res;
 
-void dfs(vector<vector <int> >& adj, vector<bool>& visited, int cur_node, int vis_nodes, int start_node, int target)
+void dfs(vector<vector <bool> >& adj, vector<bool>& visited, int cur_node, int vis_nodes, int target)
 {
     visited[cur_node] = true;
     vis_nodes++;
-
-    cout << "cur_node " << cur_node << " vis_nodes " << vis_nodes << " target " << target << '\n';
-    int n_edges = adj[cur_node].size();
-    if(vis_nodes == target && cur_node == start_node)
+    
+    if(adj[cur_node][1] && vis_nodes == target) // return to start, forms a cycle
     {
         res++;
     }
 
-    for(int i = 0; i < n_edges; i++)
+    for(int i = 1; i <= target ; i++)
     {
-        if(visited[adj[cur_node][i]] == false)
+        if(adj[cur_node][i] && visited[i] == false) // adjacent matrix
         {
-            cout << "Inner start from " << adj[cur_node][i] << '\n';
-            dfs(adj, visited, adj[cur_node][i], vis_nodes, adj[cur_node][i], target);
+            dfs(adj, visited, i, vis_nodes, target);
         }
     }
 
-    // clear the node
+    // back tracking
     visited[cur_node] = false;
     vis_nodes--;
 }
@@ -40,11 +37,11 @@ int main()
     {
         int n, k;
         cin >> n >> k;
-        
+
         res = 0;
-        
+
         // build the adjacent list
-        vector<vector <int> > adj(n + 1, vector<int>());
+        vector<vector <bool> > adj(n + 1, vector<bool>(n + 1, false));
         vector< pair<int, int>> forbid;
         int a, b;
         for(int i = 0; i < k; i++)
@@ -66,24 +63,23 @@ int main()
                         b = forbid[_k].second;
                         if((a == i && b == j) || (a == j && b == i))
                         {
-                            // cout << "fail with " << i << " and " << j << " a " << a << " b " << b << '\n';
                             ok_edge = 0;
                             break;
                         }
                     }
                     if(ok_edge)
                     {
-                        // cout << " i " << i << "  pb " << j << '\n';
-                        adj[i].push_back(j);
+                        adj[i][j] = true;
+                        adj[j][i] = true;
                     }
                 }
             }
         }
-        
-        // do dfs
-        vector<bool> visited(n, false);
-        dfs(adj, visited, 1, 0, 1, n);
-        cout << "Case #" << ++case_cnt << ": " << res % 9901 << '\n';
+
+        // do dfs, no need for(0..n) and dfs since 1 2 3 4 5, 2 3 4 5 1 is the same cycle
+        vector<bool> visited(n + 1, false);
+        dfs(adj, visited, 1, 0, n);
+        cout << "Case #" << ++case_cnt << ": " << (res / 2) % 9901 << '\n';
     }
 
     return 0;
